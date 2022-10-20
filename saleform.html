@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/7a92c07e92.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript"
+        src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/JQL.min.js"></script>
+    <script type="text/javascript"
+        src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/typeahead.bundle.js"></script>
+    <link rel="stylesheet"
+        href="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.css">
+    <script type="text/javascript"
+        src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dist/jquery.Thailand.min.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.357.0.min.js"></script>
+    <script type="text/javascript">
+
+        //Bucket Configurations
+
+        var bucketName = "fit2finance";
+        var bucketRegion = "ap-southeast-1";
+        var IdentityPoolId = "ap-southeast-1:4ee16ddb-9a3a-4500-99db-639b4c0f7e3f";
+
+        AWS.config.update({
+            region: bucketRegion,
+            credentials: new AWS.CognitoIdentityCredentials({
+                IdentityPoolId: IdentityPoolId
+            })
+        });
+
+        var s3 = new AWS.S3({
+            apiVersion: '2006-03-01',
+            params: { Bucket: bucketName }
+        });
+    </script>
+    <title>
+        ลงทะเบียนสั่งซื้อ Fitto whey
+    </title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div class="title">
+        <h1>ลงทะเบียนสั่งซื้อ Fitto whey</h1>
+    </div>
+
+    <!-- Create Form -->
+    <form id="main-form" class="container form">
+
+        <div class="form-control">
+            <span class="red-text">* Required</span>
+        </div>
+        <!-- Details -->
+
+        <div class="form-control">
+            <label for="email" id="label-email">
+                Email <span class="red-text">*</span>
+            </label>
+
+            <!-- Input Type Email-->
+            <input type="email" id="email" required placeholder="กรอก email" />
+        </div>
+
+        <div class="form-control">
+            <label for="first_name" id="label-name">
+                ชื่อ-นามสกุล (ไม่ต้องมีคำนำหน้า) <span class="red-text">*</span>
+            </label>
+
+            <!-- Input Type Text -->
+            <div class="flexrow">
+                <div class="w47">
+                    <input type="text" id="first_name" required placeholder="กรอกชื่อ" />
+                </div>
+                <div class="w47">
+                    <input type="text" id="last_name" required placeholder="กรอกนามสกุล" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-control">
+            <label for="fb_link" id="label-fb">
+                Facebook (ชื่อเฟสบุ๊ค) <span class="red-text">*</span>
+            </label>
+
+            <!-- Input Type Text -->
+            <input type="text" id="fb_link" required placeholder="กรอกชื่อเฟสบุ๊ค" />
+        </div>
+
+        <div class="form-control">
+            <label for="phone" id="label-phone">
+                เบอร์โทรศัพท์ <span class="red-text">*</span>
+            </label>
+
+            <!-- Input Type Text -->
+            <input type="text" id="phone" required placeholder="กรอกเบอร์โทรศัพท์" />
+        </div>
+
+        <div class="form-control">
+            <label for="address">
+                ที่อยู่ <span class="red-text">*</span>
+            </label>
+
+            <!-- multi-line text input control -->
+            <textarea name="address" id="address" placeholder="กรอกที่อยู่"></textarea>
+        </div>
+
+        <div class="form-control">
+            <label>รายการที่สั่งซื้อสินค้า (สินค้าที่มีตัวเลือกหลายสี กรุณาระบุสี) <span class="red-text">*</span>
+                <small>(เลือกได้หลายข้อ)</small>
+            </label>
+            <!-- Input Type Checkbox -->
+            <div id="prod_list">
+            </div>
+        </div>
+
+        <div class="form-control">
+            <label>
+                ช่องทางชำระเงิน <span class="red-text">*</span>
+            </label>
+
+            <!-- Input Type Radio Button -->
+            <label for="recommed-1">
+                <input type="radio" id="method-1" name="payment_method" checked value="tf" required>โอน</input>
+            </label>
+            <label for="recommed-2">
+                <input type="radio" id="method-2" name="payment_method" value="cc">ตัดบัตรเครดิต</input>
+            </label>
+            <label for="recommed-3">
+                <input type="radio" id="method-3" name="payment_method" value="cod">เก็บเงินปลายทาง</input>
+            </label>
+        </div>
+
+        <div class="form-control">
+            <label for="total_amount" id="label-amount">
+                จำนวนเงิน <span class="red-text">*</span>
+            </label>
+
+            <!-- Input Type Text -->
+            <input type="number" id="total_amount" required placeholder="กรอกจำนวนเงิน" />
+        </div>
+
+        <div class="form-control">
+
+            <label>
+                หลักฐานสลิป <span class="red-text">*</span>
+            </label>
+            <div>
+                <button class="button-17 btnupload" onclick="document.getElementById('fileUpload').click()"><i
+                        class="fa-solid fa-arrow-up-from-bracket"></i>&nbsp;อัพโหลดไฟล์สลิป</button>
+                <input type="file" onchange="s3upload()" name="fileUpload" required id="fileUpload" style="display: none;">
+                <p id="file_location"></p>
+            </div>
+
+            <progress max=”100” value=”0” style="width: 100%;"></progress>
+        </div>
+
+        <div class="form-control">
+            <label for="transfer_source" id="label-source">
+                โอนมาจากธนาคารใด
+            </label>
+
+            <!-- Input Type Text -->
+            <input type="text" id="transfer_source" placeholder="กรอกชื่อธนาคารที่ใช้โอนเงิน" />
+        </div>
+
+        <div class="form-control">
+            <label>
+                โอนเข้าบัญชีบริษัท
+            </label>
+
+            <!-- Input Type Radio Button -->
+            <label for="target-1">
+                <input type="radio" id="target-1" name="transfer_target" value="Fittogether" checked>Fit
+                Together</input>
+            </label>
+        </div>
+
+        <div class="form-control">
+            <label for="lastdigits" id="label-lastdigits">
+                เลขท้ายบัญชีธนาคาร 4 ตัว
+            </label>
+
+            <!-- Input Type Text -->
+            <input type="text" id="lastdigits" placeholder="กรอกเลขท้ายบัญชีธนาคาร" />
+        </div>
+
+        <div class="form-control">
+            <label for="paid_date" id="label-paid_date">
+                วันเวลาที่ชำระ
+            </label>
+
+            <!-- Input Type Text -->
+            <input type="datetime-local" max="2072-01-01" id="paid_date" />
+        </div>
+
+        <div class="form-control">
+            <label for="remark">
+                หมายเหตุ ( ถ้ามีโปรดระบุ เช่น สีเชือก สีเสื่อ , ส่วนลด/รหัสส่วนลด )
+            </label>
+
+            <!-- multi-line text input control -->
+            <textarea name="remark" id="remark" placeholder="หมายเหตุ"></textarea>
+        </div>
+
+        <div class="form-control">
+            <label for="start_date" id="label-start_date">
+                วันที่เริ่มใช้งานโปรแกรม
+            </label>
+
+            <!-- Input Type Text -->
+            <input type="date" max="2072-01-01" id="start_date" />
+        </div>
+
+        <div class="form-control">
+            <label for="period" id="label-period">
+                ระยะเวลาของโปรแกรม
+            </label>
+
+            <!-- Input Type Text -->
+            <input type="number" id="period" />
+        </div>
+
+    </form>
+    <!-- Multi-line Text Input Control -->
+    <div class="bottom">
+        <button type="submit" value="submit" id="btnSubmit" class="button-17">
+            Submit
+        </button>
+    </div>
+    <script src="js/axios.min.js"></script>
+    <script src="js/util.js"></script>
+    <script>
+        $.Thailand({
+            database: './database/db.json', // path หรือ url ไปยัง database
+            $district: $('#district'), // input ของตำบล
+            $amphoe: $('#amphoe'), // input ของอำเภอ
+            $province: $('#province'), // input ของจังหวัด
+            $zipcode: $('#zipcode'), // input ของรหัสไปรษณีย์
+        });
+        let selectedProd = [];
+        const teamName = getURLParams("team_name") || "e-commerce";
+        let slip_file = "";
+        let buyProducts = [];
+
+        function generateProdList(productList) {
+            const prodListComp = document.getElementById("prod_list");
+            prodListComp.innerHTML = '';
+            for (let index = 0; index < productList.length; index++) {
+                const { name, id, sellprice } = productList[index];
+                const price = Number(sellprice).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                const choice = document.createElement("label");
+                choice.innerHTML = `<input type="checkbox" name="selectedProd" onclick="listBuyProducts('selectedProd', 'total_amount')" value="${id}">${name} (${price})</input>`;
+                prodListComp.appendChild(choice);
+            }
+        }
+
+        function s3upload(event) {
+            var files = document.getElementById('fileUpload').files;
+            $("progress").attr('value', 0);
+            if (files) {
+                var file = files[0];
+                var fileName = file.name;
+                var filePath = 'tf_documents/' + fileName;
+                var fileUrl = 'https://' + bucketRegion + '.amazonaws.com/' + filePath;
+
+                s3.upload({
+                    Key: filePath,
+                    Body: file,
+                    ACL: 'public-read'
+                }, function (err, data) {
+                    if (err) {
+                        console.log('error', err);
+                    }
+                    slip_file = data.Location;
+                    document.getElementById("file_location").innerHTML = slip_file;
+                }).on('httpUploadProgress', function (progress) {
+                    var uploaded = parseInt((progress.loaded * 100) / progress.total);
+                    $("progress").attr('value', uploaded);
+                });
+            }
+        };
+
+        function listBuyProducts(chkboxName, totalCompName) {
+            const pidList = getCheckedBoxes(chkboxName);
+            buyProducts = selectedProd.filter(function(item) {
+                return pidList.includes(item.id);
+            });
+            const net_price = buyProducts.reduce((prev, curr) => prev + curr.sellprice, 0);
+            document.getElementById(totalCompName).setAttribute('value', net_price);
+        }
+
+        function saleSubmit(event) {
+            const submitParams = {
+                email: $('#email').val(),
+                first_name: $('#first_name').val(),
+                last_name: $('#last_name').val(),
+                fb_link: $('#fb_link').val(),
+                phone: $('#phone').val(),
+                address: $('#address').val(),
+                buyProducts,
+                payment_method: $("input[name='payment_method']:checked").val(),
+                total_amount: $('#total_amount').val(),
+                slip_file,
+                transfer_source: $('#transfer_source').val(),
+                transfer_target: $("input[name='transfer_target']:checked").val(),
+                lastdigits: $("#lastdigits").val(),
+                paid_date: $('#paid_date').val(),
+                remark: $('#remark').val(),
+                start_date: $('#start_date').val(),
+                period: $('#period').val()
+            }
+            console.log(submitParams);
+        }
+
+        axios
+            .get(`${serviceUrl}/product_list?team_name=${teamName}`)
+            .then(function (response) {
+                selectedProd = response.data;
+                selectedProd.sort((a, b) => a.order_no - b.order_no);
+                generateProdList(selectedProd);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        document.getElementById('btnSubmit').addEventListener('click', saleSubmit);
+
+    </script>
+</body>
+
+</html>

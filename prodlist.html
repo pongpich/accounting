@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ปรับรายการแสดงสินค้า</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/7a92c07e92.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div id="main" class="container">
+        <div class="alert alert-success" id="alert" style="display: none;" role="alert">
+            บันทึกสำเร็จแล้ว!
+        </div>
+        <div class="title">
+            <h1>ปรับรายการแสดงสินค้า</h1>
+        </div>
+        <div>
+            <div>
+                <input list="productsList" style="width: 100%;" placeholder="ค้นหาและเลือกสินค้า" id="allProducts">
+                <i id="filtersubmit" class="fa fa-search"></i>
+            </div>
+            <datalist id="productsList">
+            </datalist>
+        </div>
+        <ul id="main_list" class="list-group"></ul>
+        <br>
+        <div class="flexcenter">
+            <button type="button" id="btnSave" style="width: 150px;" class="button-17">Save</button>
+        </div>
+    </div>
+    <script src="js/axios.min.js"></script>
+    <script src="js/util.js"></script>
+    <script>
+        let selectedProd = [];
+        let products = [];
+        const teamName = getURLParams("team_name") || "e-commerce";
+
+        function generateTagList(productList) {
+            document.getElementById("alert").style.display = "none";
+            const main = document.getElementById("main_list");
+            main.innerHTML = '';
+            for (let index = 0; index < productList.length; index++) {
+                const element = productList[index];
+                const badge = document.createElement("li");
+                const br = document.createElement("br");
+                const name = `${element.name}`;
+                badge.classList.add("list-group-item");
+                badge.innerHTML = `<div class="flexrow"><div>${name}</div>  <i class="fa-regular fa-trash-can icon_pointer" onclick=removeSelected("${element.sku}")></i></div>`;
+                main.appendChild(badge);
+                //main.appendChild(br);
+            }
+        }
+
+        function removeSelected(sku) {
+            let removedOrder = 0;
+            const removedProduct = selectedProd.find((elem) => elem.sku === sku);
+            if (removedProduct) {
+                removedOrder = removedProduct.order_no;
+            }
+            selectedProd = selectedProd
+                .filter(item => {
+                    return item.sku !== sku
+                })
+                .map(elem => {
+                    if (elem.order_no >= removedOrder) {
+                        elem.order_no -= 1;
+                        return elem;
+                    } else {
+                        return elem;
+                    }
+                });
+            generateTagList(selectedProd);
+        }
+
+        function generateAllProduction(products) {
+            const list = document.getElementById("productsList");
+            products.forEach(function (item) {
+                var option = document.createElement('option');
+                const { sku, name } = item;
+                option.value = `${sku}:${name}`;
+                list.appendChild(option);
+            });
+        }
+
+        function shuffleList(team_name, product_list) {
+            const alert = document.getElementById("alert");
+            alert.style.display = "none";
+            const params = {
+                team_name,
+                product_list
+            };
+            axios
+                .post(`${serviceUrl}/shuffle_product`, params)
+                .then((response) => {
+                    alert.style.display = "block";
+                })
+                .catch(error => console.log(error));
+        }
+
+        axios
+            .get(`${serviceUrl}/product_list?team_name=${teamName}`)
+            .then(function (response) {
+                selectedProd = response.data;
+                selectedProd.sort((a, b) => a.order_no - b.order_no);
+                generateTagList(selectedProd);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        axios
+            .get(`${serviceUrl}/all_product`)
+            .then(function (response) {
+                products = response.data
+                generateAllProduction(products);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        document.getElementById("allProducts").addEventListener("input", (event) => {
+            if (!event.target.value) return;
+            const sku = event.target.value.split(':')[0];
+            if (selectedProd.some(prod => prod.sku === sku)) return;
+
+            const theProduct = products.find(item => item.sku === sku);
+            theProduct.order_no = selectedProd.length + 1;
+            selectedProd.push(theProduct);
+            generateTagList(selectedProd);
+            event.target.value = "";
+        });
+
+        document.getElementById("btnSave").addEventListener("click", () => shuffleList(teamName, selectedProd));
+
+    </script>
+</body>
+
+</html>
