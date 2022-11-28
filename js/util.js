@@ -22,3 +22,4 @@ function getCheckedBoxes(chkboxName) {
 
 //รหัสโปรแกรมสำหรับเลือกว่าจะสมัครรุ่นไหน โปรแกรมอะไร
 const serviceUrl = 'https://api.ccrdiet.co/coredev';
+const slipUrl = 'https://node.bebefitroutine.com';

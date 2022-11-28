@@ -152,7 +152,8 @@
             <div>
                 <button class="button-17 btnupload" onclick="document.getElementById('fileUpload').click()"><i
                         class="fa-solid fa-arrow-up-from-bracket"></i>&nbsp;อัพโหลดไฟล์สลิป</button>
-                <input type="file" onchange="s3upload()" name="fileUpload" required id="fileUpload" style="display: none;">
+                <input type="file" onchange="s3upload()" name="fileUpload" required id="fileUpload"
+                    style="display: none;">
                 <p id="file_location"></p>
             </div>
 
@@ -234,7 +235,17 @@
     </div>
     <script src="js/axios.min.js"></script>
     <script src="js/util.js"></script>
+    <script src='https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js'></script>
     <script>
+        const recognize = async ({ target: { files }  }) => {
+        const { data: { text } } = await Tesseract.recognize(files[0], 'eng', {
+          corePath: '../../node_modules/tesseract.js-core/tesseract-core.wasm.js',
+          logger: m => console.log(m),
+        });
+        console.log(text);
+      }
+      const elm = document.getElementById('uploader');
+      elm.addEventListener('change', recognize);
         $.Thailand({
             database: './database/db.json', // path หรือ url ไปยัง database
             $district: $('#district'), // input ของตำบล
@@ -287,7 +298,7 @@
 
         function listBuyProducts(chkboxName, totalCompName) {
             const pidList = getCheckedBoxes(chkboxName);
-            buyProducts = selectedProd.filter(function(item) {
+            buyProducts = selectedProd.filter(function (item) {
                 return pidList.includes(item.id);
             });
             const net_price = buyProducts.reduce((prev, curr) => prev + curr.sellprice, 0);

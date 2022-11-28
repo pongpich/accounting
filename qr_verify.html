@@ -1,0 +1,73 @@
+<html>
+
+<head>
+	<title>QRCODE</title>
+</head>
+
+<body onload="load()">
+
+	<script type="text/javascript" src="js/grid.js"></script>
+	<script type="text/javascript" src="js/version.js"></script>
+	<script type="text/javascript" src="js/detector.js"></script>
+	<script type="text/javascript" src="js/formatinf.js"></script>
+	<script type="text/javascript" src="js/errorlevel.js"></script>
+	<script type="text/javascript" src="js/bitmat.js"></script>
+	<script type="text/javascript" src="js/datablock.js"></script>
+	<script type="text/javascript" src="js/bmparser.js"></script>
+	<script type="text/javascript" src="js/datamask.js"></script>
+	<script type="text/javascript" src="js/rsdecoder.js"></script>
+	<script type="text/javascript" src="js/gf256poly.js"></script>
+	<script type="text/javascript" src="js/gf256.js"></script>
+	<script type="text/javascript" src="js/decoder.js"></script>
+	<script type="text/javascript" src="js/qrcode.js"></script>
+	<script type="text/javascript" src="js/findpat.js"></script>
+	<script type="text/javascript" src="js/alignpat.js"></script>
+	<script type="text/javascript" src="js/databr.js"></script>
+	<script src="js/axios.min.js"></script>
+	<script src="js/util.js"></script>
+
+	<script type="text/javascript">
+
+		let sendingBank = "";
+		let transRef = "";
+		let access_token = "";
+
+		function read(qr) {
+			let rawData = qr.substr(4, parseInt(qr.substr(2, 2)));
+			const vars = [];
+			while (vars.length < 3) {
+				const varlength = parseInt(rawData.substr(2, 2));
+				const data = rawData.substr(4, varlength);
+				vars.push(data);
+				rawData = rawData.substr(varlength + 4);
+			}
+			sendingBank = vars[1];
+			transRef = vars[2];
+			const slip_params = {
+				access_token,
+				sendingBank,
+				transRef
+			}
+			axios
+				.post(`${slipUrl}/slip_verify`, slip_params)
+				.then((response) => {
+					console.log("slip verify result:", response.data);
+				})
+				.catch(error => console.log(error));
+		}
+
+		function load() {
+			axios
+				.post(`${slipUrl}/read_token`)
+				.then((response) => {
+					access_token = response.data.access_token;
+					qrcode.callback = read;
+					qrcode.decode("img/slip.jpg");
+				})
+				.catch(error => console.log(error));
+		}
+
+	</script>
+</body>
+
+</html>
