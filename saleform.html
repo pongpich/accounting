@@ -58,6 +58,131 @@
         <!-- Details -->
 
         <div class="form-control">
+            <label>
+                ช่องทางชำระเงิน <span class="red-text">*</span>
+            </label>
+
+            <!-- Input Type Radio Button -->
+            <label for="recommed-1">
+                <input type="radio" id="method-1" name="payment_method" checked value="tf" required>โอน</input>
+            </label>
+            <label for="recommed-2">
+                <input type="radio" id="method-2" name="payment_method" value="cc">ตัดบัตรเครดิต</input>
+            </label>
+            <label for="recommed-3">
+                <input type="radio" id="method-3" name="payment_method" value="cod">เก็บเงินปลายทาง</input>
+            </label>
+        </div>
+
+        <div class="form-control">
+
+            <label>
+                หลักฐานสลิป <span class="red-text">*</span>
+            </label>
+            <div>
+                <button class="button-17 btnupload" onclick="document.getElementById('fileUpload').click()"><i
+                        class="fa-solid fa-arrow-up-from-bracket"></i>&nbsp;อัพโหลดไฟล์สลิป</button>
+                <input type="file" onchange="s3upload()" name="fileUpload" required id="fileUpload"
+                    style="display: none;">
+                <p id="file_location"></p>
+            </div>
+            <div  style="display: none; flex-direction: row;" id="slipContainer">
+                <img id="slipImg" width="340" alt="slip">
+                <div class="slip-data">
+                    <table style="width: 100%; font-size: 18px;">
+                        <tr>
+                            <th></th>
+                            <th>From API</th>
+                        </tr>
+                        <tr>
+                            <td>เลขที่สลิป</td>
+                            <td id="api_transRef"></td>
+                        </tr>
+                        <tr>
+                            <td>วัน</td>
+                            <td id="api_transDate"></td>
+                        </tr>
+                        <tr>
+                            <td>เวลา</td>
+                            <td id="api_transTime"></td>
+                        </tr>
+                        <tr>
+                            <td>จำนวนเงิน</td>
+                            <td id="api_amount"></td>
+                        </tr>
+                        <tr>
+                            <td>บช.ผู้ส่ง(4 ตัวท้าย)</td>
+                            <td id="api_sender"></td>
+                        </tr>
+                        <tr>
+                            <td>บช.ผู้รับ(4 ตัวท้าย)</td>
+                            <td id="api_receiver"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <progress max=”100” value=”0” style="width: 100%;"></progress>
+        </div>
+
+        <div class="form-control">
+            <label for="amount" id="label-amount">
+                จำนวนเงิน <span class="red-text">*</span>
+            </label>
+
+            <!-- Input Type Text -->
+            <input type="number" id="amount" required placeholder="กรอกจำนวนเงิน" />
+        </div>
+
+        <div class="form-control">
+            <label for="sending_bank" id="label-source">
+                โอนมาจากธนาคารใด
+            </label>
+
+            <!-- Input Type Text -->
+            <div class="flexrow">
+                <div class="w47">
+                    <input type="text" id="sending_bank" required placeholder="กรอกชื่อธนาคารที่ใช้โอนเงิน" />
+                </div>
+                <div class="w47">
+                    <input type="text" id="sending_account" required placeholder="เลขที่่บัญชีฝั่งที่ใช้โอน" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-control">
+            <label>
+                โอนเข้าบัญชีบริษัท
+            </label>
+
+            <!-- Input Type Radio Button -->
+            <div class="flexrow">
+                <div class="w47">
+                    <input type="text" id="receiver_bank" required placeholder="กรอกชื่อธนาคารฝั่งรับเงิน" />
+                </div>
+                <div class="w47">
+                    <input type="text" id="receiver_account" required placeholder="เลขที่่บัญชีฝั่งรับเงิน" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-control">
+            <label for="paid_date" id="label-paid_date">
+                วันเวลาที่ชำระ
+            </label>
+
+            <!-- Input Type Text -->
+            <div class="flexrow">
+                <div class="w47">
+                    <input type="text" id="payment_date" required placeholder="วันที่โอน" />
+                </div>
+                <div class="w47">
+                    <input type="text" id="payment_time" required placeholder="เวลาที่โอน" />
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-control">
             <label for="email" id="label-email">
                 Email <span class="red-text">*</span>
             </label>
@@ -119,85 +244,14 @@
         </div>
 
         <div class="form-control">
-            <label>
-                ช่องทางชำระเงิน <span class="red-text">*</span>
-            </label>
-
-            <!-- Input Type Radio Button -->
-            <label for="recommed-1">
-                <input type="radio" id="method-1" name="payment_method" checked value="tf" required>โอน</input>
-            </label>
-            <label for="recommed-2">
-                <input type="radio" id="method-2" name="payment_method" value="cc">ตัดบัตรเครดิต</input>
-            </label>
-            <label for="recommed-3">
-                <input type="radio" id="method-3" name="payment_method" value="cod">เก็บเงินปลายทาง</input>
-            </label>
-        </div>
-
-        <div class="form-control">
             <label for="total_amount" id="label-amount">
-                จำนวนเงิน <span class="red-text">*</span>
+                ยอดรวม <span class="red-text">*</span>
             </label>
 
             <!-- Input Type Text -->
             <input type="number" id="total_amount" required placeholder="กรอกจำนวนเงิน" />
         </div>
 
-        <div class="form-control">
-
-            <label>
-                หลักฐานสลิป <span class="red-text">*</span>
-            </label>
-            <div>
-                <button class="button-17 btnupload" onclick="document.getElementById('fileUpload').click()"><i
-                        class="fa-solid fa-arrow-up-from-bracket"></i>&nbsp;อัพโหลดไฟล์สลิป</button>
-                <input type="file" onchange="s3upload()" name="fileUpload" required id="fileUpload"
-                    style="display: none;">
-                <p id="file_location"></p>
-            </div>
-
-            <progress max=”100” value=”0” style="width: 100%;"></progress>
-        </div>
-
-        <div class="form-control">
-            <label for="transfer_source" id="label-source">
-                โอนมาจากธนาคารใด
-            </label>
-
-            <!-- Input Type Text -->
-            <input type="text" id="transfer_source" placeholder="กรอกชื่อธนาคารที่ใช้โอนเงิน" />
-        </div>
-
-        <div class="form-control">
-            <label>
-                โอนเข้าบัญชีบริษัท
-            </label>
-
-            <!-- Input Type Radio Button -->
-            <label for="target-1">
-                <input type="radio" id="target-1" name="transfer_target" value="Fittogether" checked>Fit
-                Together</input>
-            </label>
-        </div>
-
-        <div class="form-control">
-            <label for="lastdigits" id="label-lastdigits">
-                เลขท้ายบัญชีธนาคาร 4 ตัว
-            </label>
-
-            <!-- Input Type Text -->
-            <input type="text" id="lastdigits" placeholder="กรอกเลขท้ายบัญชีธนาคาร" />
-        </div>
-
-        <div class="form-control">
-            <label for="paid_date" id="label-paid_date">
-                วันเวลาที่ชำระ
-            </label>
-
-            <!-- Input Type Text -->
-            <input type="datetime-local" max="2072-01-01" id="paid_date" />
-        </div>
 
         <div class="form-control">
             <label for="remark">
@@ -208,24 +262,6 @@
             <textarea name="remark" id="remark" placeholder="หมายเหตุ"></textarea>
         </div>
 
-        <div class="form-control">
-            <label for="start_date" id="label-start_date">
-                วันที่เริ่มใช้งานโปรแกรม
-            </label>
-
-            <!-- Input Type Text -->
-            <input type="date" max="2072-01-01" id="start_date" />
-        </div>
-
-        <div class="form-control">
-            <label for="period" id="label-period">
-                ระยะเวลาของโปรแกรม
-            </label>
-
-            <!-- Input Type Text -->
-            <input type="number" id="period" />
-        </div>
-
     </form>
     <!-- Multi-line Text Input Control -->
     <div class="bottom">
@@ -233,30 +269,103 @@
             Submit
         </button>
     </div>
+    <script type="text/javascript" src="js/grid.js"></script>
+    <script type="text/javascript" src="js/version.js"></script>
+    <script type="text/javascript" src="js/detector.js"></script>
+    <script type="text/javascript" src="js/formatinf.js"></script>
+    <script type="text/javascript" src="js/errorlevel.js"></script>
+    <script type="text/javascript" src="js/bitmat.js"></script>
+    <script type="text/javascript" src="js/datablock.js"></script>
+    <script type="text/javascript" src="js/bmparser.js"></script>
+    <script type="text/javascript" src="js/datamask.js"></script>
+    <script type="text/javascript" src="js/rsdecoder.js"></script>
+    <script type="text/javascript" src="js/gf256poly.js"></script>
+    <script type="text/javascript" src="js/gf256.js"></script>
+    <script type="text/javascript" src="js/decoder.js"></script>
+    <script type="text/javascript" src="js/qrcode.js"></script>
+    <script type="text/javascript" src="js/findpat.js"></script>
+    <script type="text/javascript" src="js/alignpat.js"></script>
+    <script type="text/javascript" src="js/databr.js"></script>
+    <script src="js/moment.min.js"></script>
     <script src="js/axios.min.js"></script>
     <script src="js/util.js"></script>
-    <script src='https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js'></script>
     <script>
-        const recognize = async ({ target: { files }  }) => {
-        const { data: { text } } = await Tesseract.recognize(files[0], 'eng', {
-          corePath: '../../node_modules/tesseract.js-core/tesseract-core.wasm.js',
-          logger: m => console.log(m),
-        });
-        console.log(text);
-      }
-      const elm = document.getElementById('uploader');
-      elm.addEventListener('change', recognize);
-        $.Thailand({
-            database: './database/db.json', // path หรือ url ไปยัง database
-            $district: $('#district'), // input ของตำบล
-            $amphoe: $('#amphoe'), // input ของอำเภอ
-            $province: $('#province'), // input ของจังหวัด
-            $zipcode: $('#zipcode'), // input ของรหัสไปรษณีย์
-        });
-        let selectedProd = [];
-        const teamName = getURLParams("team_name") || "e-commerce";
-        let slip_file = "";
-        let buyProducts = [];
+        const profile = checkData();
+
+        let sendingBankParam = "";
+        let transRef = "";
+        let access_token = "";
+        let file;
+        let slip_data = {};
+
+        function read(qr) {
+            let rawData = qr.substr(4, parseInt(qr.substr(2, 2)));
+            const vars = [];
+            while (vars.length < 3) {
+                const varlength = parseInt(rawData.substr(2, 2));
+                const data = rawData.substr(4, varlength);
+                vars.push(data);
+                rawData = rawData.substr(varlength + 4);
+            }
+            sendingBankParam = vars[1];
+            transRef = vars[2];
+            const slip_params = {
+                access_token,
+                sendingBank: sendingBankParam,
+                transRef
+            }
+            console.log("sending to kbank api:", slip_params);
+            axios
+                .post(`${slipUrl}/slip_verify`, slip_params)
+                .then((response) => {
+                    console.log("slip verify result:", response.data);
+                    const {
+                        amount,
+                        sender,
+                        receiver,
+                        transDate,
+                        transRef,
+                        transTime,
+                        receivingBank,
+                        sendingBank
+                    } = response.data.data;
+
+                    console.log(slip_data);
+
+                    $("#api_transRef").html(transRef);
+
+                    $("#api_transDate").html(transDate);
+
+                    $("#api_transTime").html(transTime);
+
+                    $("#api_amount").html(amount);
+
+                    $("#api_sender").html(sender.account.value);
+
+                    $("#api_receiver").html(receiver.account.value);
+                    
+                    $('#amount').val(amount)
+                    $('#sending_bank').val(sendingBank),
+                    $('#sending_account').val(sender.account.value),
+                    $('#receiver_bank').val(receivingBank),
+                    $('#receiver_account').val(receiver.account.value),
+                    $('#payment_date').val(transDate),
+                    $('#payment_time').val(transTime)
+
+                })
+                .catch(error => console.log(error));
+        }
+
+        function load_qr(slip_file) {
+            axios
+                .post(`${slipUrl}/read_token`)
+                .then((response) => {
+                    access_token = response.data.access_token;
+                    qrcode.callback = read;
+                    qrcode.decode(slip_file);
+                })
+                .catch(error => console.log(error));
+        }
 
         function generateProdList(productList) {
             const prodListComp = document.getElementById("prod_list");
@@ -272,6 +381,7 @@
 
         function s3upload(event) {
             var files = document.getElementById('fileUpload').files;
+            $('#slipContainer').css('display', 'none');
             $("progress").attr('value', 0);
             if (files) {
                 var file = files[0];
@@ -289,6 +399,9 @@
                     }
                     slip_file = data.Location;
                     document.getElementById("file_location").innerHTML = slip_file;
+                    load_qr(slip_file);
+                    document.getElementById("slipImg").src = slip_file;
+                    $('#slipContainer').css('display', 'flex');
                 }).on('httpUploadProgress', function (progress) {
                     var uploaded = parseInt((progress.loaded * 100) / progress.total);
                     $("progress").attr('value', uploaded);
@@ -316,20 +429,60 @@
                 buyProducts,
                 payment_method: $("input[name='payment_method']:checked").val(),
                 total_amount: $('#total_amount').val(),
+                amount: $('#amount').val(),
                 slip_file,
-                transfer_source: $('#transfer_source').val(),
-                transfer_target: $("input[name='transfer_target']:checked").val(),
+                sending_bank: $('#sending_bank').val(),
+                sending_account: $('#sending_account').val(),
+                receiver_bank: $('#receiver_bank').val(),
+                receiver_account: $('#receiver_account').val(),
                 lastdigits: $("#lastdigits").val(),
-                paid_date: $('#paid_date').val(),
-                remark: $('#remark').val(),
-                start_date: $('#start_date').val(),
-                period: $('#period').val()
+                payment_date: $('#payment_date').val(),
+                payment_time: $('#payment_time').val(),
+                remark: $('#remark').val()
             }
             console.log(submitParams);
         }
 
+        function setMemberFields(data) {
+            if (data) {
+                console.log('member data:', data);
+                const {
+                    first_name,
+                    last_name,
+                    phone,
+                    fb_link,
+                    address
+                } = data
+                $('#first_name').val(first_name);
+                $('#last_name').val(last_name);
+                $('#fb_link').val(fb_link);
+                $('#phone').val(phone);
+                $('#address').val(address);
+            } else {
+                $('#first_name').val("");
+                $('#last_name').val("");
+                $('#fb_link').val("");
+                $('#phone').val("");
+                $('#address').val("");
+            }
+        }
+
+        function getMember(event) {
+            const input_email = $('#email').val();
+            if (email) {
+                axios
+                    .get(`${serviceUrl}/central_member?email=${input_email}`)
+                    .then(function (response) {
+                        setMemberFields(response.data);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        }
+
         axios
-            .get(`${serviceUrl}/product_list?team_name=${teamName}`)
+            .get(`${serviceUrl}/product_list?team_name=${profile.team_name}`)
             .then(function (response) {
                 selectedProd = response.data;
                 selectedProd.sort((a, b) => a.order_no - b.order_no);
@@ -340,6 +493,7 @@
             });
 
         document.getElementById('btnSubmit').addEventListener('click', saleSubmit);
+        document.getElementById('email').addEventListener('blur', getMember);
 
     </script>
 </body>

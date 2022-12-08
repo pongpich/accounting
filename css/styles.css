@@ -18,6 +18,16 @@ h1 {
     color: white;
 }
 
+td {
+    padding: 0 15px;
+}
+
+.slip-data {
+    text-align: left;
+    font-size: 18px;
+    font-weight: bold;
+}
+
 /* Styling form-control Class */
 .form-control {
     text-align: left;
@@ -74,6 +84,10 @@ h1 {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+.flexstart {
+    justify-content: flex-start;
 }
 
 .flexcenter {
@@ -188,4 +202,42 @@ h1 {
     height: 24px;
     padding: 20px;
     box-shadow: none !important;
+}
+
+#log>div {
+    color: #313131;
+    border-top: 1px solid #dadada;
+    padding: 9px;
+    display: flex;
+}
+
+#log>div:first-child {
+    border: 0;
+}
+
+
+.status {
+    min-width: 250px;
+}
+
+#log {
+    border: 1px solid #dadada;
+    padding: 10px;
+    margin-top: 20px;
+    min-height: 100px;
+}
+
+body {
+    font-family: sans-serif;
+    margin: 30px;
+}
+
+progress {
+    display: block;
+    width: 100%;
+    transition: opacity 0.5s linear;
+}
+
+progress[value="1"] {
+    opacity: 0.5;
 }

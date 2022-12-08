@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Order System</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <div id="main" class="container">
+    <div class="alert alert-success" id="alert" style="display: none;" role="alert">
+      บันทึกสำเร็จแล้ว!
+    </div>
+    <div class="title">
+      <h1>sign in</h1>
+    </div>
+    <div>
+      <div>
+        <input style="width: 50%;" placeholder="email" id="email">
+      </div>
+      <div>
+        <input style="width: 50%;" placeholder="รหัสพนักงาน" id="emp_code">
+      </div>
+    </div>
+    <br>
+    <div class="flexcenter">
+      <button type="button" id="btnSave" style="width: 150px;" class="button-17">เข้าระบบ</button>
+    </div>
+  </div>
+  <script src="js/axios.min.js"></script>
+  <script src="js/util.js"></script>
+  <script>
+    function signin(event) {
+      const email = document.getElementById("email").value;
+      const emp_code = document.getElementById("emp_code").value;
+      axios
+        .get(`${serviceUrl}/central_signin?email=${email}&password=${emp_code}`)
+        .then((response) => {
+          if (response.data) {
+            console.log(response.data);
+            setProfile(response.data);
+            window.location = "saleform.html"
+          }
+        })
+        .catch(error => console.log(error));
+    }
+
+    localStorage.removeItem('profile');
+    document.getElementById("btnSave").addEventListener("click", signin);
+
+  </script>
+</body>
+
+</html>

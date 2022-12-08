@@ -170,14 +170,56 @@
 
 					slip_data = {
 						amount: parseFloat(amount),
-						sender: sender.account.value.replaceAll(/[Xx-]/g, '').trim(),
-						receiver: receiver.account.value.replaceAll(/[Xx-]/g, '').trim(),
+						sender: sender.account.value,
+						receiver: receiver.account.value,
 						transDate,
 						transTime: transTime.substr(0,5),
 						transRef
 					}
 
-					recognizeFile(window.lastFile=file);
+					console.log(slip_data);
+					
+					document.getElementById("api_transRef").innerText = slip_data.transRef;
+					
+					document.getElementById("api_transDate").innerText = slip_data.transDate;
+
+					document.getElementById("api_transTime").innerText = slip_data.transTime;
+
+					document.getElementById("api_amount").innerText = slip_data.amount;
+
+					document.getElementById("api_sender").innerText = slip_data.sender;
+					
+					document.getElementById("api_receiver").innerText = slip_data.receiver;
+
+					
+					const headers_ = {
+            'Authorization': 'Bearer keyMZxLGT7Whe7EIY',
+            'Content-Type': 'application/json'
+        	};
+					axios.post("https://api.airtable.com/v0/appOpvNDewQffYMOS/orders",
+                {
+                    "fields": {
+                        "order_no": uuidv4(),
+                        "channel": "Page: Bebe Fit Routine",
+												"slip_no": slip_data.transRef,
+                        "slip_date": moment(slip_data.transDate).format("YYYY-MM-DD"),
+												"slip_time": slip_data.transTime,
+												"sender_account": slip_data.sender,
+												"receiver_account": slip_data.receiver,
+												"note": "dummy test"
+                    }
+                }, { headers: headers_ }
+            )
+                .then((resp) => {
+                    console.log("success!")
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
+				
+
+					//recognizeFile(window.lastFile=file);
 				})
 				.catch(error => console.log(error));
 		}

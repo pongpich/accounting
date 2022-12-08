@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Airtable Test
+    </title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div class="title">
+        <h1>Airtable Test</h1>
+    </div>
+
+    <!-- Create Form -->
+    <form id="contactForm" class="container form">
+
+        <div>
+            <input type="text" id="Name" name="Name" placeholder="Your Name">
+        </div>
+        <div>
+            <input type="text" name="EmailAddress" id="EmailAddress" placeholder="Your Email">
+        </div>
+        <div>
+            <textarea id="Message" name="Message" cols="30" rows="6" placeholder="Your Message"></textarea>
+            <div>
+                <input id="submit" name="submit" type="submit" value="Send Message">
+            </div>
+        </div>
+
+    </form>
+    <script src="js/axios.min.js"></script>
+    <script>
+        var thisForm = document.getElementById("contactForm");
+        const headers_ = {
+            'Authorization': 'Bearer keyMZxLGT7Whe7EIY',
+            'Content-Type': 'application/json'
+        };
+        // When the form is submitted...
+        thisForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            // POST the data
+            axios.post("https://api.airtable.com/v0/appOpvNDewQffYMOS/member",
+                {
+                    "fields": {
+                        "Name": document.getElementById("Name").value,
+                        "email": document.getElementById("EmailAddress").value,
+                        "message": document.getElementById("Message").value
+                    }
+                }, { headers: headers_ }
+            )
+                .then((resp) => {
+                    console.log("success!")
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        });
+    </script>
+</body>
+
+</html>
