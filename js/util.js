@@ -162,8 +162,16 @@ function checkData() {
   return profile;
 }
 
+function getBankName(bankCode, bankData) {
+  let bank = bankData.find(x => x.code === bankCode);
+
+  return bank && bank.name ? bank.name : "";
+}
+
 
 
 //รหัสโปรแกรมสำหรับเลือกว่าจะสมัครรุ่นไหน โปรแกรมอะไร
 const serviceUrl = 'https://api.ccrdiet.co/coredev';
 const slipUrl = 'https://node.bebefitroutine.com';
+const bsfUrl = 'https://api.planforfit.com/bebefit';
+const spreadsheetId = '1RuPrZhQFIYPOyMSrCQVpFwFt42uy2D6rNAEfgFOvPwk';

@@ -7,7 +7,7 @@ body {
 }
 
 /* Styling the Form (Color, Padding, Shadow) */
-form {
+.form {
     background-color: #fff;
     margin: 50px auto;
     padding: 30px 20px;

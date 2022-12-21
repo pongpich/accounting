@@ -46,11 +46,11 @@
 
 <body>
     <div class="title">
-        <h1>ลงทะเบียนสั่งซื้อ Fitto whey</h1>
+        <h1 id="title_label">ลงทะเบียนสั่งซื้อ Fitto whey</h1>
     </div>
 
     <!-- Create Form -->
-    <form id="main-form" class="container form">
+    <div id="main-form" class="container form">
 
         <div class="form-control">
             <span class="red-text">* Required</span>
@@ -82,7 +82,7 @@
             <div>
                 <button class="button-17 btnupload" onclick="document.getElementById('fileUpload').click()"><i
                         class="fa-solid fa-arrow-up-from-bracket"></i>&nbsp;อัพโหลดไฟล์สลิป</button>
-                <input type="file" onchange="s3upload()" name="fileUpload" required id="fileUpload"
+                <input type="file" onchange="s3upload()" name="fileUpload" id="fileUpload"
                     style="display: none;">
                 <p id="file_location"></p>
             </div>
@@ -100,23 +100,25 @@
                         </tr>
                         <tr>
                             <td>วัน</td>
-                            <td id="api_transDate"></td>
+                            <td><input type="text" readonly id="payment_date" placeholder="วันที่โอน" /></td>
                         </tr>
                         <tr>
                             <td>เวลา</td>
-                            <td id="api_transTime"></td>
+                            <td><input type="text" readonly id="payment_time" placeholder="เวลาที่โอน" /></td>
                         </tr>
                         <tr>
                             <td>จำนวนเงิน</td>
-                            <td id="api_amount"></td>
+                            <td><input type="number" readonly id="amount" placeholder="กรอกจำนวนเงิน" />
                         </tr>
                         <tr>
-                            <td>บช.ผู้ส่ง(4 ตัวท้าย)</td>
-                            <td id="api_sender"></td>
+                            <td>ฝั่งผู้โอน</td>
+                            <td><input type="text" readonly id="sending_bank" placeholder="กรอกชื่อธนาคารที่ใช้โอนเงิน" /></td>
+                            <td><input type="text" readonly id="sending_account" placeholder="เลขที่่บัญชีฝั่งที่ใช้โอน" /></td>
                         </tr>
                         <tr>
-                            <td>บช.ผู้รับ(4 ตัวท้าย)</td>
-                            <td id="api_receiver"></td>
+                            <td>บช.ผู้รับ</td>
+                            <td><input type="text" readonly id="receiver_bank" placeholder="กรอกชื่อธนาคารฝั่งรับเงิน" /></td>
+                            <td><input type="text" readonly id="receiver_account" placeholder="เลขที่่บัญชีฝั่งรับเงิน" /></td>
                         </tr>
                     </table>
                 </div>
@@ -125,63 +127,6 @@
             <progress max=”100” value=”0” style="width: 100%;"></progress>
         </div>
 
-        <div class="form-control">
-            <label for="amount" id="label-amount">
-                จำนวนเงิน <span class="red-text">*</span>
-            </label>
-
-            <!-- Input Type Text -->
-            <input type="number" id="amount" required placeholder="กรอกจำนวนเงิน" />
-        </div>
-
-        <div class="form-control">
-            <label for="sending_bank" id="label-source">
-                โอนมาจากธนาคารใด
-            </label>
-
-            <!-- Input Type Text -->
-            <div class="flexrow">
-                <div class="w47">
-                    <input type="text" id="sending_bank" required placeholder="กรอกชื่อธนาคารที่ใช้โอนเงิน" />
-                </div>
-                <div class="w47">
-                    <input type="text" id="sending_account" required placeholder="เลขที่่บัญชีฝั่งที่ใช้โอน" />
-                </div>
-            </div>
-        </div>
-
-        <div class="form-control">
-            <label>
-                โอนเข้าบัญชีบริษัท
-            </label>
-
-            <!-- Input Type Radio Button -->
-            <div class="flexrow">
-                <div class="w47">
-                    <input type="text" id="receiver_bank" required placeholder="กรอกชื่อธนาคารฝั่งรับเงิน" />
-                </div>
-                <div class="w47">
-                    <input type="text" id="receiver_account" required placeholder="เลขที่่บัญชีฝั่งรับเงิน" />
-                </div>
-            </div>
-        </div>
-
-        <div class="form-control">
-            <label for="paid_date" id="label-paid_date">
-                วันเวลาที่ชำระ
-            </label>
-
-            <!-- Input Type Text -->
-            <div class="flexrow">
-                <div class="w47">
-                    <input type="text" id="payment_date" required placeholder="วันที่โอน" />
-                </div>
-                <div class="w47">
-                    <input type="text" id="payment_time" required placeholder="เวลาที่โอน" />
-                </div>
-            </div>
-        </div>
-        
         <div class="form-control">
             <label for="email" id="label-email">
                 Email <span class="red-text">*</span>
@@ -245,13 +190,22 @@
 
         <div class="form-control">
             <label for="total_amount" id="label-amount">
-                ยอดรวม <span class="red-text">*</span>
+                ยอดรวมจากสินค้าที่เลือก <span class="red-text">*</span>
             </label>
 
             <!-- Input Type Text -->
             <input type="number" id="total_amount" required placeholder="กรอกจำนวนเงิน" />
         </div>
 
+
+        <div class="form-control">
+            <label>เซลล์ที่รับผิดชอบรายการนี้ <span class="red-text">*</span>
+                <small>(เลือกได้ชื่อเดียว)</small>
+            </label>
+            <!-- Input Type Checkbox -->
+            <div id="sale_list">
+            </div>
+        </div>
 
         <div class="form-control">
             <label for="remark">
@@ -262,11 +216,14 @@
             <textarea name="remark" id="remark" placeholder="หมายเหตุ"></textarea>
         </div>
 
-    </form>
+    </div>
     <!-- Multi-line Text Input Control -->
     <div class="bottom">
-        <button type="submit" value="submit" id="btnSubmit" class="button-17">
-            Submit
+        <button id="btnApprove" class="button-17">
+            approve
+        </button>
+        <button id="btnPending" class="button-17">
+            pending
         </button>
     </div>
     <script type="text/javascript" src="js/grid.js"></script>
@@ -289,6 +246,7 @@
     <script src="js/moment.min.js"></script>
     <script src="js/axios.min.js"></script>
     <script src="js/util.js"></script>
+    <script src="database/bank.js"></script>
     <script>
         const profile = checkData();
 
@@ -297,8 +255,13 @@
         let access_token = "";
         let file;
         let slip_data = {};
+        let selectedProd = [];
+        let buyProducts = [];
+        let sales = [];
+        let saleList = [];
 
         function read(qr) {
+            console.log("raw qr:", qr);
             let rawData = qr.substr(4, parseInt(qr.substr(2, 2)));
             const vars = [];
             while (vars.length < 3) {
@@ -319,6 +282,7 @@
                 .post(`${slipUrl}/slip_verify`, slip_params)
                 .then((response) => {
                     console.log("slip verify result:", response.data);
+                    slip_data = response.data.data
                     const {
                         amount,
                         sender,
@@ -328,29 +292,18 @@
                         transTime,
                         receivingBank,
                         sendingBank
-                    } = response.data.data;
+                    } = slip_data;
 
                     console.log(slip_data);
 
-                    $("#api_transRef").html(transRef);
-
-                    $("#api_transDate").html(transDate);
-
-                    $("#api_transTime").html(transTime);
-
-                    $("#api_amount").html(amount);
-
-                    $("#api_sender").html(sender.account.value);
-
-                    $("#api_receiver").html(receiver.account.value);
-                    
-                    $('#amount').val(amount)
-                    $('#sending_bank').val(sendingBank),
-                    $('#sending_account').val(sender.account.value),
-                    $('#receiver_bank').val(receivingBank),
-                    $('#receiver_account').val(receiver.account.value),
-                    $('#payment_date').val(transDate),
-                    $('#payment_time').val(transTime)
+                    $('#api_transRef').text(transRef);
+                    $('#amount').val(amount);
+                    $('#sending_bank').val(getBankName(sendingBank, bankData));
+                    $('#sending_account').val(sender.account.value);
+                    $('#receiver_bank').val(getBankName(receivingBank, bankData));
+                    $('#receiver_account').val(receiver.account.value);
+                    $('#payment_date').val(transDate);
+                    $('#payment_time').val(transTime);
 
                 })
                 .catch(error => console.log(error));
@@ -376,6 +329,18 @@
                 const choice = document.createElement("label");
                 choice.innerHTML = `<input type="checkbox" name="selectedProd" onclick="listBuyProducts('selectedProd', 'total_amount')" value="${id}">${name} (${price})</input>`;
                 prodListComp.appendChild(choice);
+            }
+        }
+
+        function generateSaleList(saleList) {
+            const saleListComp = document.getElementById("sale_list");
+            saleListComp.innerHTML = '';
+            for (let index = 0; index < saleList.length; index++) {
+                const { staff_code, email, nick_name } = saleList[index];
+                const choice = document.createElement("label");
+                let saleChecked = profile.staff_code === staff_code ? "checked" : "";
+                choice.innerHTML = `<input type="radio" name="selectedSale" ${saleChecked} value="${staff_code}">${email} (${nick_name})</input>`;
+                saleListComp.appendChild(choice);
             }
         }
 
@@ -418,34 +383,81 @@
             document.getElementById(totalCompName).setAttribute('value', net_price);
         }
 
-        function saleSubmit(event) {
-            const submitParams = {
-                email: $('#email').val(),
-                first_name: $('#first_name').val(),
-                last_name: $('#last_name').val(),
-                fb_link: $('#fb_link').val(),
-                phone: $('#phone').val(),
-                address: $('#address').val(),
-                buyProducts,
-                payment_method: $("input[name='payment_method']:checked").val(),
-                total_amount: $('#total_amount').val(),
-                amount: $('#amount').val(),
-                slip_file,
-                sending_bank: $('#sending_bank').val(),
-                sending_account: $('#sending_account').val(),
-                receiver_bank: $('#receiver_bank').val(),
-                receiver_account: $('#receiver_account').val(),
-                lastdigits: $("#lastdigits").val(),
-                payment_date: $('#payment_date').val(),
-                payment_time: $('#payment_time').val(),
-                remark: $('#remark').val()
+        function saleSubmit(payment_status) {
+            const {
+                amount,
+                sender,
+                receiver,
+                transDate,
+                transRef,
+                transTime,
+                receivingBank,
+                sendingBank
+            } = slip_data;
+
+            const owner_code = $("input[name='selectedSale']:checked").val();
+            const owner = saleList.find(sale => sale.staff_code == owner_code);
+            const email = $('#email').val();
+            const first_name = $('#first_name').val();
+            const last_name = $('#last_name').val();
+            const fb_link = $('#fb_link').val();
+            const phone = $('#phone').val();
+            const address = $('#address').val();
+            const remark = $('#remark').val();
+            const payment_type = $("input[name='payment_method']:checked").val();
+
+            const items = [];
+            for (let index = 0; index < buyProducts.length; index++) {
+                const prod = buyProducts[index];
+                items.push({
+                    sku: prod.sku,
+                    name: prod.name,
+                    number: 1,
+                    price: prod.sellprice,
+                    discount: 0
+                })
             }
-            console.log(submitParams);
+
+            const submitParams = {
+                spreadsheetId,
+                order_number: `CV-${moment().format("YYYYMMDDHHMMSS")}`,
+                email,
+                payment_status,
+                phone,
+                first_name,
+                last_name,
+                fb_link,
+                address,
+                payment_type,
+                sending_bank: getBankName(sendingBank, bankData),
+                sending_account: sender.account.value,
+                receive_bank: getBankName(receivingBank, bankData),
+                receive_account: receiver.account.value,
+                transRef,
+                slip_amount: amount,
+                slip_file,
+                payment_date: moment(transDate).format("YYYY-MM-DD"),
+                payment_time: transTime,
+                shipping_channel: "Flash Express",
+                sale_channel: "Sale Department",
+                entry_employee: profile.staff_code,
+                entry_employee_name: `${profile.first_name_th} ${profile.last_name_th}`,
+                owner_employee: owner.staff_code,
+                owner_employee_name: `${owner.first_name_th} ${owner.last_name_th}`,
+                remark,
+                items
+            }
+
+            axios
+                .post(`${serviceUrl}/order_man`, submitParams)
+                .then((response) => {
+                    console.log("after update:", response.data);
+                })
+                .catch(error => console.log(error));
         }
 
         function setMemberFields(data) {
             if (data) {
-                console.log('member data:', data);
                 const {
                     first_name,
                     last_name,
@@ -492,8 +504,20 @@
                 console.log(error);
             });
 
-        document.getElementById('btnSubmit').addEventListener('click', saleSubmit);
+        axios
+            .get(`${serviceUrl}/sales`)
+            .then(function (response) {
+                saleList = response.data;
+                generateSaleList(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+
+        document.getElementById('btnApprove').addEventListener('click', () => saleSubmit("approve"));
+        document.getElementById('btnPending').addEventListener('click', () => saleSubmit("pending"));
         document.getElementById('email').addEventListener('blur', getMember);
+        $('#title_label').text(`สั่งซื้อสินค้า กรอกข้อมูลโดย ${profile.first_name_th} ${profile.last_name_th}`);
 
     </script>
 </body>
