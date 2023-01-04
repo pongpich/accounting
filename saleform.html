@@ -88,7 +88,7 @@
             </div>
             <div style="display: none; flex-direction: row;" id="slipContainer">
                 <img id="slipImg" width="340" alt="slip">
-                <div class="slip-data">
+                <div class="slip-data" id="slipon">
                     <table style="width: 100%; font-size: 18px;">
                         <tr>
                             <th></th>
@@ -123,6 +123,34 @@
                                     placeholder="กรอกชื่อธนาคารฝั่งรับเงิน" /></td>
                             <td><input type="text" readonly id="receiver_account"
                                     placeholder="เลขที่่บัญชีฝั่งรับเงิน" /></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="slip-data" id="slipoff">
+                    <table style="width: 100%; font-size: 18px;">
+                        <tr>
+                            <th></th>
+                            <th>กรอกข้อมูลเอาเอง</th>
+                        </tr>
+                        <tr>
+                            <td>เลขที่สลิป</td>
+                            <td><input type="text" id="man_transref" placeholder="เลขที่สลิป" /></td>
+                        </tr>
+                        <tr>
+                            <td>ธนาคาร</td>
+                            <td>
+                                <select name="man_banks" id="man_banks">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>                            
+                                <div class="bottom">
+                                    <button id="btnManualSlip" class="button-17 btnslip">
+                                        เช็คข้อมูล Slip
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -266,6 +294,11 @@
         let buyProducts = [];
         let sales = [];
         let saleList = [];
+
+        function toggleSlipForm(toggle) {
+            document.getElementById("slipon").style.display = toggle === 'on' ? 'block' : 'none';
+            document.getElementById("slipoff").style.display = toggle === 'off' ? 'block' : 'none';
+        }
         function getAlertComp() {
             const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
             alertPlaceholder.innerHTML = '';
@@ -280,6 +313,12 @@
                 '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
                 '</div>'
             ].join('')
+
+            if (type === "success") {
+                toggleSlipForm("on");
+            } else {
+                toggleSlipForm("off");
+            }
 
             alertPlaceholder.append(wrapper)
         }
@@ -303,9 +342,37 @@
             }
             sendingBankParam = vars[1];
             transRef = vars[2];
+            accessSlipData(access_token, sendingBankParam, transRef);
+        }
+
+        function load_qr(slip_file) {
+            axios
+                .post(`${slipUrl}/read_token`)
+                .then((response) => {
+                    access_token = response.data.access_token;
+                    qrcode.callback = read;
+                    qrcode.decode(slip_file);
+                })
+                .catch(error => console.log("qr error:", error));
+        }
+
+        function loadSlipData() {
+            const sendingBank = $("#man_banks").val();
+            const transRef = $("#man_transref").val();
+            console.log("loadSlipData:", sendingBank, transRef);
+            axios
+                .post(`${slipUrl}/read_token`)
+                .then((response) => {
+                    access_token = response.data.access_token;
+                    accessSlipData(access_token, sendingBank, transRef)
+                })
+                .catch(error => console.log("manual error:", error));
+        }
+
+        function accessSlipData(access_token, sendingBank, transRef) {
             const slip_params = {
                 access_token,
-                sendingBank: sendingBankParam,
+                sendingBank,
                 transRef
             }
             console.log("sending to kbank api:", slip_params);
@@ -346,17 +413,6 @@
                 .catch(error => console.log(error));
         }
 
-        function load_qr(slip_file) {
-            axios
-                .post(`${slipUrl}/read_token`)
-                .then((response) => {
-                    access_token = response.data.access_token;
-                    qrcode.callback = read;
-                    qrcode.decode(slip_file);
-                })
-                .catch(error => console.log("qr error:", error));
-        }
-
         function generateProdList(productList) {
             const prodListComp = document.getElementById("prod_list");
             prodListComp.innerHTML = '';
@@ -382,6 +438,7 @@
         }
 
         function s3upload(event) {
+            toggleSlipForm("on");
             var files = document.getElementById('fileUpload').files;
             $('#slipContainer').css('display', 'none');
             $("progress").attr('value', 0);
@@ -554,7 +611,16 @@
         document.getElementById('btnApprove').addEventListener('click', () => saleSubmit("approve"));
         document.getElementById('btnPending').addEventListener('click', () => saleSubmit("pending"));
         document.getElementById('email').addEventListener('blur', getMember);
+        document.getElementById('btnManualSlip').addEventListener('click', () => loadSlipData());
         $('#title_label').text(`สั่งซื้อสินค้า กรอกข้อมูลโดย ${profile.first_name_th} ${profile.last_name_th}`);
+
+        let man_banks = document.getElementById('man_banks').options;
+
+        bankData.forEach(bank =>
+            man_banks.add(
+                new Option(bank.name, bank.code, bank.selected, bank.selected)
+            )
+        );
 
     </script>
 </body>

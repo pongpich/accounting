@@ -13,7 +13,7 @@ const bankData = [
     {"code": "025", "name": "BAY"},
     {"code": "026", "name": "MEGA"},
     {"code": "027", "name": "BA"},
-    {"code": "030", "name": "GSB"},
+    {"code": "030", "name": "GSB", "selected": true},
     {"code": "031", "name": "HSBC"},
     {"code": "032", "name": "DB"},
     {"code": "033", "name": "GHB"},

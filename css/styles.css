@@ -204,6 +204,20 @@ td {
     box-shadow: none !important;
 }
 
+.btnslip,
+.btnslip:active,
+.btnslip:focus {
+    border: 1px solid rgb(177, 175, 175);
+    background-color: #3B85B0;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 400;
+    height: 24px;
+    padding: 20px;
+    box-shadow: none !important;
+}
+
 #log>div {
     color: #313131;
     border-top: 1px solid #dadada;
