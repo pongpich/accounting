@@ -218,6 +218,11 @@
             <!-- Input Type Checkbox -->
             <div id="prod_list">
             </div>
+            <div>
+                <button id="btnModProd" class="button-17 btnslip">
+                    แก้ไขรายการสินค้า
+                </button>
+            </div>
         </div>
 
         <div class="form-control">
@@ -587,6 +592,10 @@
             }
         }
 
+        function goToProdList() {
+            window.location = `./prodlist.html?team_name=${profile.team_name}`
+        }
+
         axios
             .get(`${serviceUrl}/product_list?team_name=${profile.team_name}`)
             .then(function (response) {
@@ -612,6 +621,7 @@
         document.getElementById('btnPending').addEventListener('click', () => saleSubmit("pending"));
         document.getElementById('email').addEventListener('blur', getMember);
         document.getElementById('btnManualSlip').addEventListener('click', () => loadSlipData());
+        document.getElementById('btnModProd').addEventListener('click', () => goToProdList())
         $('#title_label').text(`สั่งซื้อสินค้า กรอกข้อมูลโดย ${profile.first_name_th} ${profile.last_name_th}`);
 
         let man_banks = document.getElementById('man_banks').options;
