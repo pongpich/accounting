@@ -64,13 +64,16 @@
 
             <!-- Input Type Radio Button -->
             <label for="recommed-1">
-                <input type="radio" id="method-1" name="payment_method" checked value="tf" required>โอน</input>
+                <input type="radio" id="radPayMethod" name="radPayMethod" checked value="transfer">โอน</input>
             </label>
             <label for="recommed-2">
-                <input type="radio" id="method-2" name="payment_method" value="cc">ตัดบัตรเครดิต</input>
+                <input type="radio" id="radPayMethod" name="radPayMethod" value="manual">โอน (กรอกเอง)</input>
             </label>
             <label for="recommed-3">
-                <input type="radio" id="method-3" name="payment_method" value="cod">เก็บเงินปลายทาง</input>
+                <input type="radio" id="radPayMethod" name="radPayMethod" value="cod">เก็บเงินปลายทาง</input>
+            </label>
+            <label for="recommed-ภ">
+                <input type="radio" id="radPayMethod" name="radPayMethod" value="other">อื่นๆ</input>
             </label>
         </div>
 
@@ -96,32 +99,32 @@
                         </tr>
                         <tr>
                             <td>เลขที่สลิป</td>
-                            <td id="api_transRef"></td>
+                            <td><input type="text" id="api_transRef" placeholder="เลขที่สลิป" /></td>
                         </tr>
                         <tr>
                             <td>วัน</td>
-                            <td><input type="text" readonly id="payment_date" placeholder="วันที่โอน" /></td>
+                            <td><input type="text" id="payment_date" placeholder="วันที่โอน" /></td>
                         </tr>
                         <tr>
                             <td>เวลา</td>
-                            <td><input type="text" readonly id="payment_time" placeholder="เวลาที่โอน" /></td>
+                            <td><input type="text" id="payment_time" placeholder="เวลาที่โอน" /></td>
                         </tr>
                         <tr>
                             <td>จำนวนเงิน</td>
-                            <td><input type="number" readonly id="amount" placeholder="กรอกจำนวนเงิน" />
+                            <td><input type="number" id="amount" placeholder="กรอกจำนวนเงิน" />
                         </tr>
                         <tr>
                             <td>ฝั่งผู้โอน</td>
-                            <td><input type="text" readonly id="sending_bank"
+                            <td><input type="text" id="sending_bank"
                                     placeholder="กรอกชื่อธนาคารที่ใช้โอนเงิน" /></td>
-                            <td><input type="text" readonly id="sending_account"
+                            <td><input type="text" id="sending_account"
                                     placeholder="เลขที่่บัญชีฝั่งที่ใช้โอน" /></td>
                         </tr>
                         <tr>
                             <td>บช.ผู้รับ</td>
-                            <td><input type="text" readonly id="receiver_bank"
+                            <td><input type="text" id="receiver_bank"
                                     placeholder="กรอกชื่อธนาคารฝั่งรับเงิน" /></td>
-                            <td><input type="text" readonly id="receiver_account"
+                            <td><input type="text" id="receiver_account"
                                     placeholder="เลขที่่บัญชีฝั่งรับเงิน" /></td>
                         </tr>
                     </table>
@@ -160,51 +163,60 @@
         </div>
 
         <div class="form-control">
-            <label for="email" id="label-email">
-                Email <span class="red-text">*</span>
+            <label for="page" id="label-page">
+                มาจาก Page
             </label>
 
             <!-- Input Type Email-->
-            <input type="email" id="email" required placeholder="กรอก email" />
+            <input type="text" id="page" placeholder="มาจากเพจไหน" />
+        </div>
+
+        <div class="form-control">
+            <label for="email" id="label-email">
+                Email
+            </label>
+
+            <!-- Input Type Email-->
+            <input type="email" id="email" placeholder="กรอก email" />
         </div>
 
         <div class="form-control">
             <label for="first_name" id="label-name">
-                ชื่อ-นามสกุล (ไม่ต้องมีคำนำหน้า) <span class="red-text">*</span>
+                ชื่อ-นามสกุล (ไม่ต้องมีคำนำหน้า)
             </label>
 
             <!-- Input Type Text -->
             <div class="flexrow">
                 <div class="w47">
-                    <input type="text" id="first_name" required placeholder="กรอกชื่อ" />
+                    <input type="text" id="first_name" placeholder="กรอกชื่อ" />
                 </div>
                 <div class="w47">
-                    <input type="text" id="last_name" required placeholder="กรอกนามสกุล" />
+                    <input type="text" id="last_name" placeholder="กรอกนามสกุล" />
                 </div>
             </div>
         </div>
 
         <div class="form-control">
             <label for="fb_link" id="label-fb">
-                Facebook (ชื่อเฟสบุ๊ค) <span class="red-text">*</span>
+                Facebook (ชื่อเฟสบุ๊ค)
             </label>
 
             <!-- Input Type Text -->
-            <input type="text" id="fb_link" required placeholder="กรอกชื่อเฟสบุ๊ค" />
+            <input type="text" id="fb_link" placeholder="กรอกชื่อเฟสบุ๊ค" />
         </div>
 
         <div class="form-control">
             <label for="phone" id="label-phone">
-                เบอร์โทรศัพท์ <span class="red-text">*</span>
+                เบอร์โทรศัพท์
             </label>
 
             <!-- Input Type Text -->
-            <input type="text" id="phone" required placeholder="กรอกเบอร์โทรศัพท์" />
+            <input type="text" id="phone" placeholder="กรอกเบอร์โทรศัพท์" />
         </div>
 
         <div class="form-control">
             <label for="address">
-                ที่อยู่ <span class="red-text">*</span>
+                ที่อยู่
             </label>
 
             <!-- multi-line text input control -->
@@ -231,7 +243,7 @@
             </label>
 
             <!-- Input Type Text -->
-            <input type="number" id="total_amount" required placeholder="กรอกจำนวนเงิน" />
+            <input type="number" id="total_amount" placeholder="กรอกจำนวนเงิน" />
         </div>
 
 
@@ -404,7 +416,7 @@
 
                     console.log(slip_data);
 
-                    $('#api_transRef').text(transRef);
+                    $('#api_transRef').val(transRef);
                     $('#amount').val(amount);
                     $('#sending_bank').val(getBankName(sendingBank, bankData));
                     $('#sending_account').val(sender.account.value);
@@ -503,7 +515,8 @@
             const phone = $('#phone').val();
             const address = $('#address').val();
             const remark = $('#remark').val();
-            const payment_type = $("input[name='payment_method']:checked").val();
+            const payment_type = $("input[name='radPayMethod']:checked").val();
+            const page = $('#page').val();
 
             const items = [];
             for (let index = 0; index < buyProducts.length; index++) {
@@ -520,6 +533,7 @@
             const submitParams = {
                 spreadsheetId,
                 order_number: `CV-${moment().format("YYYYMMDDHHMMSS")}`,
+                page,
                 email,
                 payment_status,
                 phone,
@@ -532,7 +546,7 @@
                 sending_account: sender.account.value,
                 receive_bank: getBankName(receivingBank, bankData),
                 receive_account: receiver.account.value,
-                transRef,
+                transref: transRef,
                 slip_amount: amount,
                 slip_file,
                 payment_date: moment(transDate).format("YYYY-MM-DD"),
@@ -596,6 +610,23 @@
             window.location = `./prodlist.html?team_name=${profile.team_name}`
         }
 
+        const radioButtons = document.querySelectorAll('input[name="radPayMethod"]');
+        for(const radioButton of radioButtons){
+            radioButton.addEventListener('change', showSelected);
+        }        
+        
+        function showSelected(e) {
+            console.log(`You selected ${this.value}`);
+            if(this.value !== "transfer") {
+                $('#slipImg').css('display', 'none');
+                $('#slipContainer').css('display', 'flex');
+                toggleSlipForm("on");
+            } else {
+                $('#slipImg').css('display', 'flex');
+                $('#slipContainer').css('display', 'none');
+            }
+        }
+
         axios
             .get(`${serviceUrl}/product_list?team_name=${profile.team_name}`)
             .then(function (response) {
@@ -619,7 +650,7 @@
 
         document.getElementById('btnApprove').addEventListener('click', () => saleSubmit("approve"));
         document.getElementById('btnPending').addEventListener('click', () => saleSubmit("pending"));
-        document.getElementById('email').addEventListener('blur', getMember);
+        //document.getElementById('email').addEventListener('blur', getMember);
         document.getElementById('btnManualSlip').addEventListener('click', () => loadSlipData());
         document.getElementById('btnModProd').addEventListener('click', () => goToProdList())
         $('#title_label').text(`สั่งซื้อสินค้า กรอกข้อมูลโดย ${profile.first_name_th} ${profile.last_name_th}`);
