@@ -4,11 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/7a92c07e92.js" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <!-- <script type="text/javascript"
         src="https://earthchie.github.io/jquery.Thailand.js/jquery.Thailand.js/dependencies/JQL.min.js"></script>
     <script type="text/javascript"
@@ -49,9 +47,49 @@
         <h1 id="title_label">ลงทะเบียนสั่งซื้อ Fitto whey</h1>
     </div>
 
+    <!-- Modal -->
+    <div id="loadMe" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal_title">Loading</h5>
+                    <button type="button" class="btn-close" id="modalCloseIcon" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="loader" id="loader"></div>
+                    <div clas="loader-txt">
+                      <p id="loading_msg">กำลังบันทึกข้อมูล</small></p>
+                    </div>
+                    <div id="modal_msg">
+                        <p class="text-secondary"><small>ท่านสามารถเข้าไปดูข้อมูลใน Google Sheet ได้ <a href="https://bit.ly/3WkqnAZ" target="_blank">ที่นี่</a></small></p>
+                    </div>
+                </div>
+                <div class="modal-footer" id="modal_footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Create Form -->
     <div id="main-form" class="container form">
 
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Modal Header</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Some text in the modal.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
         <div class="form-control">
             <span class="red-text">* Required</span>
         </div>
@@ -115,17 +153,13 @@
                         </tr>
                         <tr>
                             <td>ฝั่งผู้โอน</td>
-                            <td><input type="text" id="sending_bank"
-                                    placeholder="กรอกชื่อธนาคารที่ใช้โอนเงิน" /></td>
-                            <td><input type="text" id="sending_account"
-                                    placeholder="เลขที่่บัญชีฝั่งที่ใช้โอน" /></td>
+                            <td><input type="text" id="sending_bank" placeholder="กรอกชื่อธนาคารที่ใช้โอนเงิน" /></td>
+                            <td><input type="text" id="sending_account" placeholder="เลขที่่บัญชีฝั่งที่ใช้โอน" /></td>
                         </tr>
                         <tr>
                             <td>บช.ผู้รับ</td>
-                            <td><input type="text" id="receiver_bank"
-                                    placeholder="กรอกชื่อธนาคารฝั่งรับเงิน" /></td>
-                            <td><input type="text" id="receiver_account"
-                                    placeholder="เลขที่่บัญชีฝั่งรับเงิน" /></td>
+                            <td><input type="text" id="receiver_bank" placeholder="กรอกชื่อธนาคารฝั่งรับเงิน" /></td>
+                            <td><input type="text" id="receiver_account" placeholder="เลขที่่บัญชีฝั่งรับเงิน" /></td>
                         </tr>
                     </table>
                 </div>
@@ -147,7 +181,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>                            
+                            <td>
                                 <div class="bottom">
                                     <button id="btnManualSlip" class="button-17 btnslip">
                                         เช็คข้อมูล Slip
@@ -275,9 +309,6 @@
             pending
         </button>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-        crossorigin="anonymous"></script>
     <script type="text/javascript" src="js/grid.js"></script>
     <script type="text/javascript" src="js/version.js"></script>
     <script type="text/javascript" src="js/detector.js"></script>
@@ -311,6 +342,20 @@
         let buyProducts = [];
         let sales = [];
         let saleList = [];
+
+        function loading(mode) {
+            let loading_msg = "กำลังบันทึกข้อมูล";
+            if (mode === "success") {
+                loading_msg = "บันทึกสำเร็จ"
+            } else if (mode === "error") {
+                loading_msg = "เกิดข้อผิดพลาดบางอย่าง"
+            }
+            document.getElementById("modal_title").innerText = mode;
+            document.getElementById("loading_msg").innerText = loading_msg;
+            document.getElementById("modalCloseIcon").style.display = mode === "loading" ? "none" : "block";
+            document.getElementById("loader").style.display = mode === "loading" ? "block" : "none";
+            document.getElementById("modal_footer").style.display = mode === "loading" ? "none" : "block";
+        }
 
         function toggleSlipForm(toggle) {
             document.getElementById("slipon").style.display = toggle === 'on' ? 'block' : 'none';
@@ -426,6 +471,7 @@
                     $('#payment_time').val(transTime);
 
                     alert(`ดึงข้อมูลสำเร็จ`, 'success');
+                    checkRevAcc();
                 })
                 .catch(error => console.log(error));
         }
@@ -494,7 +540,8 @@
             document.getElementById(totalCompName).setAttribute('value', net_price);
         }
 
-        function saleSubmit(payment_status) {
+        function saleSubmit(event, payment_status) {
+            event.preventDefault();
             const {
                 amount,
                 sender,
@@ -505,7 +552,9 @@
                 receivingBank,
                 sendingBank
             } = slip_data;
-
+            
+            loading("loading");
+            $("#loadMe").modal("show");
             const owner_code = $("input[name='selectedSale']:checked").val();
             const owner = saleList.find(sale => sale.staff_code == owner_code);
             const email = $('#email').val();
@@ -564,9 +613,17 @@
             axios
                 .post(`${serviceUrl}/order_man`, submitParams)
                 .then((response) => {
-                    console.log("after update:", response.data);
+                    if (response.data) {
+                        
+                        loading("success");
+                    } else {
+                        loading("error");
+                    }
                 })
-                .catch(error => console.log(error));
+                .catch(error => {
+                    console.log("in catch:",error);
+                    loading("error");
+                });
         }
 
         function setMemberFields(data) {
@@ -611,13 +668,13 @@
         }
 
         const radioButtons = document.querySelectorAll('input[name="radPayMethod"]');
-        for(const radioButton of radioButtons){
+        for (const radioButton of radioButtons) {
             radioButton.addEventListener('change', showSelected);
-        }        
-        
+        }
+
         function showSelected(e) {
             console.log(`You selected ${this.value}`);
-            if(this.value !== "transfer") {
+            if (this.value !== "transfer") {
                 $('#slipImg').css('display', 'none');
                 $('#slipContainer').css('display', 'flex');
                 toggleSlipForm("on");
@@ -625,6 +682,21 @@
                 $('#slipImg').css('display', 'flex');
                 $('#slipContainer').css('display', 'none');
             }
+        }
+
+        function checkRevAcc() {
+            const revAccNo = $('#receiver_account').val();
+            const inputRevBank = $('#receiver_bank').val();
+            const inputDigit = revAccNo.replaceAll(/[xX-]/g, "");
+            const lastDigits = ["06407", "0640", "6407", "28812", "2881", "8812"];
+            const revBanks = ["scb", "kbank"]
+            if ((lastDigits.includes(inputDigit)) && (revBanks.includes(inputRevBank.toLowerCase()))) {
+                alert(`ชื่อบัญชีและเลขที่บัญชีฝั่งรับถูกต้อง`, 'success');
+            } else {
+                alert(`ชื่อบัญชีและเลขที่บัญชีฝั่งรับไม่ถูกต้อง`, 'danger');
+                toggleSlipForm("on");
+            }
+            console.log("inside checkRevAcc:", revAccNo.replaceAll(/[xX-]/g, ""));
         }
 
         axios
@@ -648,12 +720,22 @@
                 console.log(error);
             })
 
-        document.getElementById('btnApprove').addEventListener('click', () => saleSubmit("approve"));
-        document.getElementById('btnPending').addEventListener('click', () => saleSubmit("pending"));
+        $(document).ready(function() {
+            $('#btnApprove').on('click', (event) => saleSubmit(event, "approve"));
+            $('#btnPending').on('click', (event) => saleSubmit(event, "pending"));
+            $('#btnManualSlip').on('click', () => loadSlipData());
+            $('#btnModProd').on('click', () => goToProdList());
+            $('#receiver_bank').on('input', () => checkRevAcc());
+            $('#receiver_account').on('input', () => checkRevAcc());
+            $('#title_label').text(`สั่งซื้อสินค้า กรอกข้อมูลโดย ${profile.first_name_th} ${profile.last_name_th}`);
+        });
+        //document.getElementById('btnApprove').addEventListener('click', (event) => saleSubmit(event, "approve"));
+        //document.getElementById('btnPending').addEventListener('click', (event) => saleSubmit(event, "pending"));
         //document.getElementById('email').addEventListener('blur', getMember);
-        document.getElementById('btnManualSlip').addEventListener('click', () => loadSlipData());
-        document.getElementById('btnModProd').addEventListener('click', () => goToProdList())
-        $('#title_label').text(`สั่งซื้อสินค้า กรอกข้อมูลโดย ${profile.first_name_th} ${profile.last_name_th}`);
+        //document.getElementById('btnManualSlip').addEventListener('click', () => loadSlipData());
+        //document.getElementById('btnModProd').addEventListener('click', () => goToProdList());
+        //document.getElementById('receiver_bank').addEventListener('input', () => checkRevAcc());
+        //document.getElementById('receiver_account').addEventListener('input', () => checkRevAcc());
 
         let man_banks = document.getElementById('man_banks').options;
 
