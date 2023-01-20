@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Sale HR</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://kit.fontawesome.com/7a92c07e92.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div id="main" class="container">
+        <div class="alert alert-success" id="alert" style="display: none;" role="alert">
+            บันทึกสำเร็จแล้ว!
+        </div>
+        <div class="title">
+            <h1>Sale HR</h1>
+        </div>
+        <div class="flexcenter">
+            <table id="sales_table" class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Staff Code</th>
+                        <th>Email</th>
+                        <th>First Name(th)</th>
+                        <th>Last Name(th)</th>
+                        <th>First Name(en)</th>
+                        <th>Last Name(en)</th>
+                        <th>Nick Name</th>
+                        <th>Position</th>
+                        <th>Team</th>
+                    </tr>
+                </thead>
+                <tbody id="sales_body">
+                    <!-- and so on... -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="js/axios.min.js"></script>
+    <script src="js/util.js"></script>
+    <script>
+        function approving(pendingOrder) {
+            console.log("inside appriving:", pendingOrder);
+            const {
+                order_number,
+                email,
+                phone,
+                first_name,
+                last_name,
+                fb_link,
+                address,
+                payment_type,
+                sending_bank,
+                sending_account,
+                receive_bank,
+                receive_account,
+                transref,
+                slip_amount,
+                slip_file,
+                trans_date,
+                trans_time,
+                shipping_channel,
+                sale_channel,
+                entry_employee,
+                entry_first_name,
+                entry_last_name,
+                owner_employee,
+                owner_first_name,
+                owner_last_name,
+                remark,
+                items
+            } = pendingOrder;
+            const submitParams = {
+                spreadsheetId,
+                payment_status: "approve",
+                order_number,
+                email,
+                phone,
+                first_name,
+                last_name,
+                fb_link,
+                address,
+                payment_type,
+                sending_bank,
+                sending_account,
+                receive_bank,
+                receive_account,
+                transref,
+                slip_amount,
+                slip_file,
+                payment_date: trans_date.split('T')[0],
+                payment_time: trans_time,
+                shipping_channel,
+                sale_channel,
+                entry_employee,
+                entry_employee_name: `${entry_first_name} ${entry_last_name}`,
+                owner_employee,
+                owner_employee_name: `${owner_first_name} ${owner_last_name}`,
+                remark,
+                items
+            }
+
+            axios
+                .post(`${serviceUrl}/order_man`, submitParams)
+                .then((response) => {
+                    console.log("after update:", response.data);
+                    resetTable();
+                })
+                .catch(error => console.log(error));
+        }
+
+        function resetTable() {
+            $("#sales_table tbody").empty();
+            axios
+                .get(`${serviceUrl}/sales`)
+                .then(function (response) {
+                    sales = response.data
+                    for (let index = 0; index < sales.length; index++) {
+                        const sale = sales[index];
+                        const {
+                            staff_code,
+                            email,
+                            first_name_th,
+                            last_name_th,
+                            first_name_en,
+                            last_name_en,
+                            nick_name,
+                            position,
+                            team_name                      
+                        } = sale;
+                        const table = document.getElementById("sales_table").getElementsByTagName('tbody')[0];
+                        const row = table.insertRow(table.rows.length);
+
+                        const cell1 = row.insertCell(0);
+                        const cell2 = row.insertCell(1);
+                        const cell3 = row.insertCell(2);
+                        const cell4 = row.insertCell(3);
+                        const cell5 = row.insertCell(4);
+                        const cell6 = row.insertCell(5);
+                        const cell7 = row.insertCell(6);
+                        const cell8 = row.insertCell(7);
+                        const cell9 = row.insertCell(8);
+
+                        cell1.innerHTML = staff_code;
+                        cell2.innerHTML = email,
+                        cell3.innerHTML = first_name_th;
+                        cell4.innerHTML = last_name_th;
+                        cell5.innerHTML = first_name_en;
+                        cell6.innerHTML = last_name_en;
+                        cell7.innerHTML = nick_name;
+                        cell8.innerHTML = position;
+                        cell9.innerHTML = team_name;
+
+                        /*const button = document.createElement("button");
+                        button.classList.add('button-17', 'btnslip');
+                        button.textContent = 'Approve';
+                        button.addEventListener('click', () => approving(pending));
+                        cell12.appendChild(button);*/
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
+        resetTable();
+
+    </script>
+</body>
+
+</html>
