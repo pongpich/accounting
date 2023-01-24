@@ -156,9 +156,9 @@ function getProfile() {
 function checkData() {
   const profile = getProfile();
   console.log("inside checkData:", profile);
-  if (!profile || !profile.team_name) {
+  if (!profile && (profile.department_code !== "05" || profile.department_code !== "06")) {
     window.location = "/index.html";
-  }
+  } 
   return profile;
 }
 
@@ -168,6 +168,27 @@ function getBankName(bankCode, bankData) {
   return bank && bank.name ? bank.name : "";
 }
 
+
+function modalLoading(mode, modalId, hiddenModalId) {
+  if (hiddenModalId) {
+    $(`#${hiddenModalId}`).modal("hide");
+  }
+  if (modalId) {
+    $(`#${modalId}`).modal("show");
+  }
+
+  let loading_msg = "กำลังบันทึกข้อมูล";
+  if (mode === "success") {
+      loading_msg = "บันทึกสำเร็จ"
+  } else if (mode === "error") {
+      loading_msg = "เกิดข้อผิดพลาดบางอย่าง"
+  }
+  document.getElementById("modal_title").innerText = mode;
+  document.getElementById("loading_msg").innerText = loading_msg;
+  document.getElementById("modalCloseIcon").style.display = mode === "loading" ? "none" : "block";
+  document.getElementById("loader").style.display = mode === "loading" ? "block" : "none";
+  document.getElementById("modal_footer").style.display = mode === "loading" ? "none" : "block";
+}
 
 
 //รหัสโปรแกรมสำหรับเลือกว่าจะสมัครรุ่นไหน โปรแกรมอะไร

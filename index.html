@@ -41,9 +41,14 @@
         .get(`${serviceUrl}/central_signin?email=${email}&password=${emp_code}`)
         .then((response) => {
           if (response.data) {
-            console.log(response.data);
-            setProfile(response.data);
-            window.location = "saleform.html"
+            const {data} = response;
+            console.log(data);
+            setProfile(data);
+            if (data.team_name) {
+              window.location = "saleform.html";
+            } else if (data.department_code === "05" || data.department_code === "06") {
+              window.location = "pending_list.html";
+            }
           }
         })
         .catch(error => console.log(error));

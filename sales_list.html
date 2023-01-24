@@ -5,20 +5,114 @@
     <title>Sale HR</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/7a92c07e92.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pending_list.html">Approve</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="sales_list.html">HR</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Modal -->
+    <div id="loadMe" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal_title">Loading</h5>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="loader" id="loader"></div>
+                    <div clas="loader-txt">
+                        <p id="loading_msg">กำลังบันทึกข้อมูล</small></p>
+                    </div>
+                </div>
+                <div class="modal-footer" id="modal_footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="empForm" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal_title">ข้อมูลพนักงาน</h5>
+                    <button type="button" class="btn-close" id="modalCloseIcon" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div id="main-form" class="container form" style="margin-top: 0; margin-bottom: 0;">
+                        <div class="form-control">
+                            <input type="text" id="staff_code" placeholder="รหัสพนักงาน" />
+                            <input type="email" id="email" placeholder="email" />
+                            <div class="flexrow">
+                                <div class="w47">
+                                    <input type="text" id="first_name_th" placeholder="ชื่อ(ไทย)" />
+                                </div>
+                                <div class="w47">
+                                    <input type="text" id="last_name_th" placeholder="นามสกุล(ไทย)" />
+                                </div>
+                            </div>
+                            <div class="flexrow">
+                                <div class="w47">
+                                    <input type="text" id="first_name_en" placeholder="First Name(en)" />
+                                </div>
+                                <div class="w47">
+                                    <input type="text" id="last_name_en" placeholder="Last Name(en)" />
+                                </div>
+                            </div>
+                            <input type="text" id="nick_name" placeholder="ชื่อเล่น" />
+                            <input type="text" id="position" placeholder="ตำแหน่ง" />
+                        </div>
+
+                        <div class="form-control">
+                            <label for="team_name">
+                                ชื่อทีม
+                            </label>
+
+                            <select name="team_name" id="team_name">
+                                <option value="e-commerce">e-commerce</option>
+                                <option value="telesale">telesale</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer" id="modal_footer">
+                    <button type="button" id="btnSubmit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="main" class="container">
         <div class="alert alert-success" id="alert" style="display: none;" role="alert">
             บันทึกสำเร็จแล้ว!
         </div>
         <div class="title">
             <h1>Sale HR</h1>
+        </div>
+
+        <div style="text-align: end; margin-bottom: 0;">
+            <button id="btnAdd" class="btn btn-primary"><i class="fa fa-plus"></i></button>
         </div>
         <div class="flexcenter">
             <table id="sales_table" class="styled-table">
@@ -33,6 +127,7 @@
                         <th>Nick Name</th>
                         <th>Position</th>
                         <th>Team</th>
+                        <th>Edit/Delete</th>
                     </tr>
                 </thead>
                 <tbody id="sales_body">
@@ -44,74 +139,75 @@
     <script src="js/axios.min.js"></script>
     <script src="js/util.js"></script>
     <script>
-        function approving(pendingOrder) {
-            console.log("inside appriving:", pendingOrder);
-            const {
-                order_number,
-                email,
-                phone,
-                first_name,
-                last_name,
-                fb_link,
-                address,
-                payment_type,
-                sending_bank,
-                sending_account,
-                receive_bank,
-                receive_account,
-                transref,
-                slip_amount,
-                slip_file,
-                trans_date,
-                trans_time,
-                shipping_channel,
-                sale_channel,
-                entry_employee,
-                entry_first_name,
-                entry_last_name,
-                owner_employee,
-                owner_first_name,
-                owner_last_name,
-                remark,
-                items
-            } = pendingOrder;
-            const submitParams = {
-                spreadsheetId,
-                payment_status: "approve",
-                order_number,
-                email,
-                phone,
-                first_name,
-                last_name,
-                fb_link,
-                address,
-                payment_type,
-                sending_bank,
-                sending_account,
-                receive_bank,
-                receive_account,
-                transref,
-                slip_amount,
-                slip_file,
-                payment_date: trans_date.split('T')[0],
-                payment_time: trans_time,
-                shipping_channel,
-                sale_channel,
-                entry_employee,
-                entry_employee_name: `${entry_first_name} ${entry_last_name}`,
-                owner_employee,
-                owner_employee_name: `${owner_first_name} ${owner_last_name}`,
-                remark,
-                items
+        function openDataForm(mode, sale) {
+            $("#empForm").modal("show");
+            if (mode === "edit") {
+                const {
+                    staff_code,
+                    email,
+                    first_name_th,
+                    last_name_th,
+                    first_name_en,
+                    last_name_en,
+                    nick_name,
+                    position,
+                    team_name
+                } = sale;
+                $('#staff_code').val(staff_code);
+                $('#email').val(email);
+                $('#first_name_th').val(first_name_th);
+                $('#last_name_th').val(last_name_th);
+                $('#first_name_en').val(first_name_en);
+                $('#last_name_en').val(last_name_en);
+                $('#nick_name').val(nick_name);
+                $('#position').val(position);
+                $('#team_name').val(team_name);
             }
+        }
+        function deleteSale(sale) {
+            console.log("inside delete:", sale);
+            modalLoading("loading", "loadMe", "empForm");
+            const submitParams = { data: { staff_code: sale.staff_code } }
 
             axios
-                .post(`${serviceUrl}/order_man`, submitParams)
+                .delete(`${serviceUrl}/employee`, submitParams)
                 .then((response) => {
-                    console.log("after update:", response.data);
+                    console.log("after delete:", response.data);
                     resetTable();
+                    modalLoading("success");
                 })
-                .catch(error => console.log(error));
+                .catch(error => {
+                    modalLoading("error");
+                    console.log(error)
+                });
+        }
+
+        function addSale() {
+            modalLoading("loading", "loadMe", "empForm");
+            const submitParams = {
+                staff_code: $('#staff_code').val(),
+                email: $('#email').val(),
+                first_name_th: $('#first_name_th').val(),
+                last_name_th: $('#last_name_th').val(),
+                first_name_en: $('#first_name_en').val(),
+                last_name_en: $('#last_name_en').val(),
+                nick_name: $('#nick_name').val(),
+                position: $('#position').val(),
+                team_name: $('#team_name').val(),
+                department_code: '05'
+            };
+
+            axios
+                .post(`${serviceUrl}/employee`, submitParams)
+                .then((response) => {
+                    console.log("after add:", response.data);
+                    resetTable();
+                    modalLoading("success");
+                })
+                .catch(error => {
+                    modalLoading("error");
+                    console.log(error);
+                });
         }
 
         function resetTable() {
@@ -131,7 +227,7 @@
                             last_name_en,
                             nick_name,
                             position,
-                            team_name                      
+                            team_name
                         } = sale;
                         const table = document.getElementById("sales_table").getElementsByTagName('tbody')[0];
                         const row = table.insertRow(table.rows.length);
@@ -145,10 +241,11 @@
                         const cell7 = row.insertCell(6);
                         const cell8 = row.insertCell(7);
                         const cell9 = row.insertCell(8);
+                        const cell10 = row.insertCell(9);
 
                         cell1.innerHTML = staff_code;
                         cell2.innerHTML = email,
-                        cell3.innerHTML = first_name_th;
+                            cell3.innerHTML = first_name_th;
                         cell4.innerHTML = last_name_th;
                         cell5.innerHTML = first_name_en;
                         cell6.innerHTML = last_name_en;
@@ -156,11 +253,21 @@
                         cell8.innerHTML = position;
                         cell9.innerHTML = team_name;
 
-                        /*const button = document.createElement("button");
-                        button.classList.add('button-17', 'btnslip');
-                        button.textContent = 'Approve';
-                        button.addEventListener('click', () => approving(pending));
-                        cell12.appendChild(button);*/
+                        const rowDiv = document.createElement("div");
+                        rowDiv.classList.add('flexrow');
+                        cell10.appendChild(rowDiv);
+
+                        const btnEdit = document.createElement("button");
+                        btnEdit.classList.add('btn', 'btn-primary');
+                        btnEdit.innerHTML = '<i class="fa fa-pencil"></i>';
+                        btnEdit.addEventListener('click', () => openDataForm("edit", sale));
+                        rowDiv.appendChild(btnEdit);
+
+                        const btnDelete = document.createElement("button");
+                        btnDelete.classList.add('btn', 'btn-danger');
+                        btnDelete.innerHTML = '<i class="fa fa-trash"></i>';
+                        btnDelete.addEventListener('click', () => deleteSale(sale));
+                        rowDiv.appendChild(btnDelete);
                     }
                 })
                 .catch(function (error) {
@@ -169,6 +276,12 @@
         }
 
         resetTable();
+
+
+        $(document).ready(function () {
+            $('#btnAdd').on('click', (event) => openDataForm("new"));
+            $('#btnSubmit').on('click', () => addSale());
+        });
 
     </script>
 </body>
