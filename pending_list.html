@@ -178,8 +178,8 @@
                         const cell12 = row.insertCell(11);
 
                         cell1.innerHTML = order_number;
-                        cell2.innerHTML = slip_file,
-                            cell3.innerHTML = slip_amount;
+                        cell2.innerHTML = `<a href="${slip_file}" target="_blank">ไฟล์ slip</a>`,
+                        cell3.innerHTML = slip_amount;
                         cell4.innerHTML = `${trans_date.split('T')[0]} ${trans_time}`;
                         cell5.innerHTML = `${sending_bank}:${sending_account}`;
                         cell6.innerHTML = `${receive_bank}:${sending_account}`;

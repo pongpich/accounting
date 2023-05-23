@@ -468,6 +468,7 @@
                     console.log(slip_data);
 
                     $('#api_transRef').val(transRef);
+                    $('#man_transref').val(transRef);
                     $('#amount').val(amount);
                     $('#sending_bank').val(getBankName(sendingBank, bankData));
                     $('#sending_account').val(sender.account.value);
@@ -478,6 +479,7 @@
 
                     alert(`ดึงข้อมูลสำเร็จ`, 'success');
                     checkRevAcc();
+                    checkOrder(transRef);
                 })
                 .catch(error => console.log(error));
         }
@@ -607,7 +609,7 @@
                 payment_date: moment(transDate).format("YYYY-MM-DD"),
                 payment_time: transTime,
                 shipping_channel: "Flash Express",
-                sale_channel: "Sale Department",
+                sale_channel: profile.team_name,
                 entry_employee: profile.staff_code,
                 entry_employee_name: `${profile.first_name_th} ${profile.last_name_th}`,
                 owner_employee: owner.staff_code,
@@ -703,6 +705,20 @@
                 toggleSlipForm("on");
             }
             console.log("inside checkRevAcc:", revAccNo.replaceAll(/[xX-]/g, ""));
+        }
+
+        function checkOrder(transRef) {
+            axios
+            .get(`${serviceUrl}/have_order?order_number=${transRef}`)
+            .then(function (response) {
+                duplicatedOrder = response.data;
+                if (duplicatedOrder) {
+                    alert(`มีการใช้งาน Slip ใบนี้มาก่อนแล้ว`, 'danger');
+                } 
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }
 
         axios
