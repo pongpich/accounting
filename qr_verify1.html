@@ -63,7 +63,7 @@
 					<tr>
 						<th></th>
 						<th>From API</th>
-						<th>From AI</th>
+						<th>From OCR</th>
 						<th>Matching (%)</th>
 					</tr>
 					<tr>
@@ -128,7 +128,7 @@
 	<script type="text/javascript" src="js/databr.js"></script>
 	<script src="js/axios.min.js"></script>
 	<script src="js/util.js"></script>
-	<script src="/js/tesseract/tesseract.min.js"></script>
+	<!-- <script src="/js/tesseract/tesseract.min.js"></script> -->
 	<script src="js/moment.min.js"></script>
 
 	<script type="text/javascript">
@@ -141,6 +141,7 @@
 
 		function read(qr) {
 			let rawData = qr.substr(4, parseInt(qr.substr(2, 2)));
+			console.log("rawdata:", rawData)
 			const vars = [];
 			while (vars.length < 3) {
 				const varlength = parseInt(rawData.substr(2, 2));
