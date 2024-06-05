@@ -42,14 +42,23 @@
         });
     </script>
     <title>
-        ลงทะเบียนสั่งซื้อ Fitto whey
+        Ordersystem
     </title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+<style>
+    #box {
+        display: none;
+        /* background-color: blueviolet;
+        color: white;
+        width: 100px;
+        height: 100px; */
+    }
+</style>
 
 <body>
     <div class="title">
-        <h1 id="title_label">ลงทะเบียนสั่งซื้อ Fitto whey</h1>
+        <h1 id="title_label">Ordersystem</h1>
     </div>
 
     <!-- Modal -->
@@ -107,21 +116,30 @@
             </label>
 
             <!-- Input Type Radio Button -->
-            <label for="recommed-1">
-                <input type="radio" id="radPayMethod" name="radPayMethod" checked value="transfer">โอน</input>
+            <label for="recommed-3">
+                <input type="radio" id="hide" name="example" value="hide">เก็บเงินปลายทาง</input>
+                <!-- <label for="hide"></label> -->
             </label>
-            <label for="recommed-2">
-                <input type="radio" id="radPayMethod" name="radPayMethod" value="manual">โอน (กรอกเอง)</input>
+
+            <label for="recommed-3">
+                <input type="radio" id="hide" name="example" value="show" checked>โอน (ตรวจเช็คสลิป OCR
+                อัตโมมัติ) </input>
+                <!-- <label for="show">Show</label> -->
             </label>
             <label for="recommed-3">
-                <input type="radio" id="radPayMethod" name="radPayMethod" value="cod">เก็บเงินปลายทาง</input>
+                <input type="radio" id="show" name="example" value="show">โอน (ตรวจเช็คสลิปแบบกรอกเอง) </input>
+                <!-- <label for="show">Show</label> -->
             </label>
-            <label for="recommed-ภ">
-                <input type="radio" id="radPayMethod" name="radPayMethod" value="other">อื่นๆ</input>
+            <label for="recommed-3">
+                <input type="radio" id="hide" name="example" value="hide" checked>อื่นๆ</input>
+                <!-- <label for="hide"></label> -->
             </label>
+
+
         </div>
 
-        <div class="form-control">
+
+        <div id="box" class="form-control">
 
             <label>
                 หลักฐานสลิป <span class="red-text">*</span>
@@ -143,29 +161,36 @@
                         </tr>
                         <tr>
                             <td>เลขที่สลิป</td>
-                            <td><input type="text" id="api_transRef" placeholder="เลขที่สลิป" /></td>
+                            <td><input type="text" id="api_transRef" placeholder="กรอกเลขที่สลิป" /></td>
+                            <td><input type="text" id="sending_account" placeholder="เลขที่สลิป" /></td>
+
                         </tr>
                         <tr>
                             <td>วัน</td>
-                            <td><input type="text" id="payment_date" placeholder="วันที่โอน" /></td>
+                            <td><input type="text" id="payment_date" placeholder="กรอกวันที่โอน" /></td>
+                            <td><input type="text" id="sending_account" placeholder="วันที่โอน" /></td>
+
                         </tr>
                         <tr>
                             <td>เวลา</td>
-                            <td><input type="text" id="payment_time" placeholder="เวลาที่โอน" /></td>
+                            <td><input type="text" id="payment_time" placeholder="กรอกเวลาที่โอน" /></td>
+                            <td><input type="text" id="sending_account" placeholder="เวลาที่โอน" /></td>
+
                         </tr>
                         <tr>
                             <td>จำนวนเงิน</td>
                             <td><input type="number" id="amount" placeholder="กรอกจำนวนเงิน" />
+                            <td><input type="text" id="sending_account" placeholder="จำนวนเงิน" /></td>
                         </tr>
                         <tr>
                             <td>ฝั่งผู้โอน</td>
-                            <td><input type="text" id="sending_bank" placeholder="กรอกชื่อธนาคารที่ใช้โอนเงิน" /></td>
-                            <td><input type="text" id="sending_account" placeholder="เลขที่่บัญชีฝั่งที่ใช้โอน" /></td>
+                            <td><input type="text" id="sending_bank" placeholder="กรอกเลขที่บัญชีฝั่งที่ใช้โอน" /></td>
+                            <td><input type="text" id="sending_account" placeholder="เลขที่บัญชีฝั่งที่ใช้โอน" /></td>
                         </tr>
                         <tr>
                             <td>บช.ผู้รับ</td>
-                            <td><input type="text" id="receiver_bank" placeholder="กรอกชื่อธนาคารฝั่งรับเงิน" /></td>
-                            <td><input type="text" id="receiver_account" placeholder="เลขที่่บัญชีฝั่งรับเงิน" /></td>
+                            <td><input type="text" id="receiver_bank" placeholder="กรอกเลขที่บัญชีฝั่งรับเงิน" /></td>
+                            <td><input type="text" id="receiver_account" placeholder="เลขที่บัญชีฝั่งรับเงิน" /></td>
                         </tr>
                     </table>
                 </div>
@@ -268,6 +293,10 @@
                 <small>(เลือกได้หลายข้อ)</small>
             </label>
             <!-- Input Type Checkbox -->
+            <label for="vehicle1"> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                สินค้าสำหรับการทดสอบระบบ 1 (ทีม Dev) : หมวดหมู่ Equipment</label>
+            <label for="vehicle1"> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                สินค้าสำหรับการทดสอบระบบ 2 (ทีม Dev) : หมวดหมู่ Fitto</label>
             <div id="prod_list">
             </div>
             <div>
@@ -276,24 +305,91 @@
                 </button>
             </div>
         </div>
-
         <div class="form-control">
             <label for="total_amount" id="label-amount">
-                ยอดรวมจากสินค้าที่เลือก <span class="red-text">*</span>
+                ยอดรวม <span class="red-text">*</span>
             </label>
 
             <!-- Input Type Text -->
             <input type="number" id="total_amount" placeholder="กรอกจำนวนเงิน" />
         </div>
+        <div class="form-control">
+            <label for="total_amount" id="label-amount">
+                โปรโมชัน
+            </label>
+            โปรลดประจำ
+            <label for="vehicle1"> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> 5%
+                จากราคาปกติ</label>
+            <br>
+            โปรเปลี่ยนทุกเดือน
+            <label for="vehicle1"> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> BEBE99080 -
+                โค้ดลดเพิ่ม 290 เพียงช๊อปครบ 999 = 11.2%</label>
+            <label for="vehicle1"> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> BEBE99080 -
+                โค้ดลดเพิ่ม 80 เพียงช๊อปครบ 999 = 8%</label>
+            <label for="vehicle1"> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> BEBE99190 -
+                โค้ดลดเพิ่ม 190 เพียงช๊อปครบ 1,900 = 10%</label>
+            <label for="vehicle1"> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> BEBE99290 -
+                โค้ดลดเพิ่ม 290 เพียงช๊อปครบ 2,600 = 11.2%</label>
+            <label for="vehicle1"> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> BEBE99900 -
+                โค้ดลดเพิ่ม 900 เพียงช๊อปครบ 6,900 = 13%</label>
+            <br>โปรพิเศษแต่ละเดือน
+            <label for="vehicle1"> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> BEBECB40 - ช๊อปครบ
+                500-999| รับคืน 40 บาท</label>
+            <label for="vehicle1"> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> BEBECB100 -
+                ช๊อปครบ 1000-1499| รับคืน 100 บาท ขั้นต่ำ 500</label>
+            <label for="vehicle1"> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> BEBECB150 -
+                ช๊อปครบ 1500-1999| รับคืน 150 บาท ขั้นต่ำ 750</label>
+            <label for="vehicle1"> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> BEBECB210 -
+                ช๊อปครบ 2000-2499| รับคืน 210 บาท ขั้นต่ำ 1050</label>
+            <label for="vehicle1"> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> BEBECB290 -
+                ช๊อปครบ 2500 ขึ้นไป| รับคืน 260 บาท ขั้นต่ำ 1300</label>
+            <br>โปรเพิ่มเติม
+            <label for="vehicle1"> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> BEBExxxx - xxxxxx
+                | รับคืน xxxxx บาท</label>
+            <br>โปรโมชันของแถม
+            <label for="vehicle1"> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> ซื้อสินค้าครบ 1500
+                บาท โอนในวันนั้นรับฟรี ผ้าขนหนูผืนเล็ก</label>
+            <label for="vehicle1"> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> ซื้อสินค้าครบ 1500
+                บาท โอนในวันนั้นรับฟรี Fitto Drink 3 ซอง</label>
+            <label for="vehicle1"> <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"> ซื้อสินค้าครบ 3200
+                บาท โอนในวันนั้นรับฟรี แผ่นแปะจุก</label>
 
+
+            <button id="btnModProd" class="button-17 btnslip">
+                แก้ไขรายการโปรโมชันและของแถม
+            </button>
+
+        </div>
 
         <div class="form-control">
-            <label>เซลล์ที่รับผิดชอบรายการนี้ <span class="red-text">*</span>
-                <small>(เลือกได้ชื่อเดียว)</small>
+            <label for="total_amount" id="label-amount">
+                ยอดสุทธิหลังหักลดราคาแล้ว <span class="red-text">*</span>
             </label>
-            <!-- Input Type Checkbox -->
-            <div id="sale_list">
-            </div>
+
+            <!-- Input Type Text -->
+            <input type="number" id="total_amount" placeholder="ตรงช่องนี้เดี๋ยวจะคำนวณให้ทีหลังครับ" />
+        </div>
+        <div class="form-control">
+            <label>
+                เซลล์ที่รับผิดชอบ <span class="red-text">*</span>
+            </label>
+
+            <!-- Input Type Radio Button -->
+            <label for="recommed-1">
+                <input type="radio" id="radPayMethod" name="radPayMethod" value="transfer">เซลล์บอย</input>
+            </label>
+            <label for="recommed-2">
+                <input type="radio" id="radPayMethod" name="radPayMethod" value="manual">เซลล์กอล์ฟ</input>
+            </label>
+            <label for="recommed-3">
+                <input type="radio" id="radPayMethod" name="radPayMethod" value="cod">เซลล์หน่วย</input>
+            </label>
+            <label for="recommed-ภ">
+                <input type="radio" id="radPayMethod" name="radPayMethod" value="other">เซลล์อ๊อฟ</input>
+            </label>
+            <button id="btnModProd" class="button-17 btnslip">
+                แก้ไขรายชื่อเซลล์
+            </button>
         </div>
 
         <div class="form-control">
@@ -308,11 +404,14 @@
     </div>
     <!-- Multi-line Text Input Control -->
     <div class="bottom">
-        <button id="btnApprove" class="button-17">
-            approve
-        </button>
-        <button id="btnPending" class="button-17">
+        <!-- <button id="btnApprove" class="button-17">
+            Approve
+        </button> -->
+        <!-- <button id="btnPending" class="button-17">
             pending
+        </button> -->
+        <button type="button" class="button">
+            <span class="button__text">Save Changes</span>
         </button>
     </div>
     <script type="text/javascript" src="js/grid.js"></script>
@@ -337,17 +436,39 @@
     <script src="js/util.js"></script>
     <script src="database/bank.js"></script>
     <script>
+        const theButton = document.querySelector(".button");
+
+        theButton.addEventListener("click", () => {
+            theButton.classList.add("button--loading");
+        });
+        const box = document.getElementById('box');
+
+        function handleRadioClick() {
+            if (document.getElementById('show').checked) {
+                box.style.display = 'block';
+            } else {
+                box.style.display = 'none';
+            }
+        }
+
+        const radioButtonsx = document.querySelectorAll('input[name="example"]');
+        radioButtonsx.forEach(radio => {
+            radio.addEventListener('click', handleRadioClick);
+        });
+
+
         const profile = checkData();
 
         let sendingBankParam = "";
         let transRef = "";
-        let access_token = "";
         let file;
         let slip_data = {};
         let selectedProd = [];
         let buyProducts = [];
         let sales = [];
         let saleList = [];
+        let access_token = "";
+        let access_token2 = "";
 
         function loading(mode) {
             let loading_msg = "กำลังบันทึกข้อมูล";
@@ -417,7 +538,9 @@
             axios
                 .post(`${slipUrl}/read_token`)
                 .then((response) => {
-                    access_token = response.data.access_token;
+                    console.log(response.data.access_token);
+                    access_token2 = response.data.access_token;
+
                     qrcode.callback = read;
                     qrcode.decode(slip_file);
                 })
@@ -709,16 +832,16 @@
 
         function checkOrder(transRef) {
             axios
-            .get(`${serviceUrl}/have_order?order_number=${transRef}`)
-            .then(function (response) {
-                duplicatedOrder = response.data;
-                if (duplicatedOrder) {
-                    alert(`มีการใช้งาน Slip ใบนี้มาก่อนแล้ว`, 'danger');
-                } 
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+                .get(`${serviceUrl}/have_order?order_number=${transRef}`)
+                .then(function (response) {
+                    duplicatedOrder = response.data;
+                    if (duplicatedOrder) {
+                        alert(`มีการใช้งาน Slip ใบนี้มาก่อนแล้ว`, 'danger');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
 
         axios

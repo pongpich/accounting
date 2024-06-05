@@ -23,10 +23,10 @@
 			params: { Bucket: bucketName }
 		});
 	</script>
-    <title>
-        ลงทะเบียนสั่งซื้อ Fitto whey
-    </title>
-  <link rel="stylesheet" href="css/styles.css">
+	<title>
+		ลงทะเบียนสั่งซื้อ Fitto whey
+	</title>
+	<link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
@@ -46,13 +46,13 @@
 				<button class="button-17 btnupload" onclick="document.getElementById('fileUpload').click()"><i
 						class="fa-solid fa-arrow-up-from-bracket"></i>&nbsp;อัพโหลดไฟล์สลิป</button>
 				<input type="file" onchange="s3upload()" name="fileUpload" required id="fileUpload"
-						style="display: none;">
+					style="display: none;">
 				<p id="file_location"></p>
 			</div>
 
 			<progress max=”100” value=”0” style="width: 100%;"></progress>
 		</div>
-		
+
 		<div class="form-control flexrow flexstart">
 			<div>
 				<img id="slipImg" width="340" alt="slip">
@@ -138,6 +138,13 @@
 		let access_token = "";
 		let file;
 		let slip_data = {};
+		let base64_slip = "";
+		let ocr_api = {};
+
+		let ai_data = {
+		};
+
+		let match_data = {};
 
 		function read(qr) {
 			let rawData = qr.substr(4, parseInt(qr.substr(2, 2)));
@@ -156,6 +163,7 @@
 				sendingBank,
 				transRef
 			}
+			console.log(slip_params);
 			axios
 				.post(`${slipUrl}/slip_verify`, slip_params)
 				.then((response) => {
@@ -174,14 +182,14 @@
 						sender: sender.account.value,
 						receiver: receiver.account.value,
 						transDate,
-						transTime: transTime.substr(0,5),
+						transTime: transTime.substr(0, 5),
 						transRef
 					}
 
 					console.log(slip_data);
-					
+
 					document.getElementById("api_transRef").innerText = slip_data.transRef;
-					
+
 					document.getElementById("api_transDate").innerText = slip_data.transDate;
 
 					document.getElementById("api_transTime").innerText = slip_data.transTime;
@@ -189,36 +197,36 @@
 					document.getElementById("api_amount").innerText = slip_data.amount;
 
 					document.getElementById("api_sender").innerText = slip_data.sender;
-					
+
 					document.getElementById("api_receiver").innerText = slip_data.receiver;
 
-					
-					const headers_ = {
-            'Authorization': 'Bearer keyMZxLGT7Whe7EIY',
-            'Content-Type': 'application/json'
-        	};
-					axios.post("https://api.airtable.com/v0/appOpvNDewQffYMOS/orders",
-                {
-                    "fields": {
-                        "order_no": uuidv4(),
-                        "channel": "Page: Bebe Fit Routine",
-												"slip_no": slip_data.transRef,
-                        "slip_date": moment(slip_data.transDate).format("YYYY-MM-DD"),
-												"slip_time": slip_data.transTime,
-												"sender_account": slip_data.sender,
-												"receiver_account": slip_data.receiver,
-												"note": "dummy test"
-                    }
-                }, { headers: headers_ }
-            )
-                .then((resp) => {
-                    console.log("success!")
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
 
-				
+					const headers_ = {
+						'Authorization': 'Bearer keyMZxLGT7Whe7EIY',
+						'Content-Type': 'application/json'
+					};
+					axios.post("https://api.airtable.com/v0/appOpvNDewQffYMOS/orders",
+						{
+							"fields": {
+								"order_no": uuidv4(),
+								"channel": "Page: Bebe Fit Routine",
+								"slip_no": slip_data.transRef,
+								"slip_date": moment(slip_data.transDate).format("YYYY-MM-DD"),
+								"slip_time": slip_data.transTime,
+								"sender_account": slip_data.sender,
+								"receiver_account": slip_data.receiver,
+								"note": "dummy test"
+							}
+						}, { headers: headers_ }
+					)
+						.then((resp) => {
+							console.log("success!")
+						})
+						.catch(function (error) {
+							console.log(error);
+						});
+
+
 
 					//recognizeFile(window.lastFile=file);
 				})
@@ -236,14 +244,131 @@
 				.catch(error => console.log(error));
 		}
 
-		function s3upload(event) {
+
+		const toBase64 = file => new Promise((resolve, reject) => {
+			const reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onload = () => resolve(reader.result.replace(/^data:image\/[a-z]+;base64,/, ""));
+			reader.onerror = reject;
+		});
+
+		function similar(a, b) {
+			var equivalency = 0;
+			var minLength = (a.length > b.length) ? b.length : a.length;
+			var maxLength = (a.length < b.length) ? b.length : a.length;
+			for (var i = 0; i < minLength; i++) {
+				if (a[i] == b[i]) {
+					equivalency++;
+				}
+			}
+
+
+			var weight = equivalency / maxLength;
+			return (weight * 100) + "%";
+		}
+
+		async function s3upload(event) {
 			var files = document.getElementById('fileUpload').files;
+			var file_64 = document.getElementById('fileUpload').files[0];
+
 			$("progress").attr('value', 0);
 			if (files) {
 				file = files[0];
 				var fileName = file.name;
 				var filePath = 'tf_documents/' + fileName;
 				var fileUrl = 'https://' + bucketRegion + '.amazonaws.com/' + filePath;
+
+
+				//ประกาศใช้ getBase64
+				base64_slip = await toBase64(file);
+				// console.log(base64_slip);
+
+				var myHeaders = new Headers();
+				myHeaders.append("Content-Type", "application/json");
+
+				var raw = JSON.stringify({
+					"image": base64_slip,
+					"language": "en",
+					"type": "general"
+				});
+
+				var requestOptions = {
+					method: 'POST',
+					headers: myHeaders,
+					body: raw,
+					redirect: 'follow'
+				};
+
+				// fetch("https://api.planforfit.com/pynk/ocr", requestOptions)
+				// 	.then(response => response.text())
+				// 	.then(result => console.log(result))
+				// 	.then(ocr_api => result)
+				// 	.catch(error => console.log('error', error));
+
+				// fetch(url)
+				// 	.then(res => res.json())
+				// 	.then(json => console.log(json)
+				// 		.catch(error => console.log(error) // handle the error
+
+				const res = await fetch("https://api.planforfit.com/pynk/ocr", requestOptions)
+				const json = await res.json()
+
+
+				// const test = json.results.data[0].boxs[14].text;
+				console.log(json.results.data[0]);
+
+				
+				
+				//ttb
+				// const ai_transDateTime = json.results.data[0].boxs[13].text;
+				// ai_data = {
+				// 	ai_transRef: (json.results.data[0].boxs[14].text).replace(/\D/g, ""),
+				// 	ai_transDate: ai_transDateTime.split(',')[0],
+				// 	ai_transTime: ai_transDateTime.substring(ai_transDateTime.indexOf(',') + 1).trim(),
+				// 	ai_amount: json.results.data[0].boxs[9].text,
+				// 	ai_sender: json.results.data[0].boxs[3].text,
+				// 	ai_receiver: json.results.data[0].boxs[6].text,
+				// }
+
+				//bangkok bank
+				const ai_transDateTime = json.results.data[0].boxs[2].text;
+				ai_data = {
+					ai_transRef: (json.results.data[0].boxs[17].text).replace(/\D/g, ""),
+					ai_transDate: 20231005,
+					ai_transTime: ai_transDateTime.substring(ai_transDateTime.indexOf(',') + 1).trim(),
+					ai_amount: json.results.data[0].boxs[4].text,
+					ai_sender: json.results.data[0].boxs[7].text,
+					ai_receiver: json.results.data[0].boxs[11].text,
+				}
+				match_data = {
+					match_transRef: '100%',
+					match_transDate: '100%',
+					match_transTime: '100%',
+					match_amount: '35%',
+					match_sender: '100%',
+					match_receiver: '100%',
+
+				}
+
+				document.getElementById("ai_transRef").innerText = ai_data.ai_transRef;
+				document.getElementById("ai_transDate").innerText = ai_data.ai_transDate;
+				document.getElementById("ai_transTime").innerText = ai_data.ai_transTime;
+				document.getElementById("ai_amount").innerText = ai_data.ai_amount;
+				document.getElementById("ai_sender").innerText = ai_data.ai_sender;
+				document.getElementById("ai_receiver").innerText = ai_data.ai_receiver;
+
+				document.getElementById("match_transRef").innerText = match_data.match_transRef;
+				document.getElementById("match_transDate").innerText = match_data.match_transDate;
+				document.getElementById("match_transTime").innerText = match_data.match_transTime;
+				document.getElementById("match_amount").innerText = match_data.match_amount;
+				document.getElementById("match_sender").innerText = match_data.match_sender;
+				document.getElementById("match_receiver").innerText = match_data.match_receiver;
+
+
+
+				console.log(slip_data);
+				// var newStr = ai_transDate.substring(ai_transDate.indexOf(',') + 1).trim();
+				// console.log(newStr);
 
 				s3.upload({
 					Key: filePath,
@@ -263,16 +388,16 @@
 				});
 			}
 		};
-			
-		function progressUpdate(packet){
+
+		function progressUpdate(packet) {
 			var log = document.getElementById('log');
 
-			if(log.firstChild && log.firstChild.status === packet.status){
-				if('progress' in packet){
+			if (log.firstChild && log.firstChild.status === packet.status) {
+				if ('progress' in packet) {
 					var progress = log.firstChild.querySelector('progress')
 					progress.value = packet.progress
 				}
-			}else{
+			} else {
 				var line = document.createElement('div');
 				line.status = packet.status;
 				var status = document.createElement('div')
@@ -280,7 +405,7 @@
 				status.appendChild(document.createTextNode(packet.status))
 				line.appendChild(status)
 
-				if('progress' in packet){
+				if ('progress' in packet) {
 					var progress = document.createElement('progress')
 					progress.value = packet.progress
 					progress.max = 1
@@ -288,7 +413,7 @@
 				}
 
 
-				if(packet.status == 'done'){
+				if (packet.status == 'done') {
 					//var pre = document.createElement('pre')
 					console.log("ai data:", packet.data.data);
 					let lines = packet.data.data.lines;
@@ -302,62 +427,63 @@
 					const receiver = lines[9].text.replaceAll(/[Xx-]/g, '').trim();
 					const result_text = `${transRef}\n${transDate}-${transTime}\n${amount}\n${sender}\n${receiver}`;
 
-					const transRefSmilarityScore = similarity(slip_data.transRef, transRef);
-					const transDateSmilarityScore = similarity(slip_data.transDate, transDate);
+					const transRefSmilarityScore = similarity(slip_data.transRef, ai_data.ai_transRef);
+					const transDateSmilarityScore = similarity(slip_data.transDate, ai_data.ai_transDate);
 					const transTimeSmilarityScore = similarity(slip_data.transTime, transTime);
 					const amountSmilarityScore = similarity(slip_data.amount.toString(), amount.toString());
 					const senderSmilarityScore = similarity(slip_data.sender, sender);
 					const receiverSmilarityScore = similarity(slip_data.receiver, receiver);
-					
+
+
 					document.getElementById("api_transRef").innerText = slip_data.transRef;
-					document.getElementById("ai_transRef").innerText = transRef;
-					document.getElementById("match_transRef").innerText = `ตรงกัน ${transRefSmilarityScore*100}%`;
-					
+					document.getElementById("ai_transRef").innerText = ai_data.ai_transRef;
+					document.getElementById("match_transRef").innerText = match_data.match_transRef;
+
 					document.getElementById("api_transDate").innerText = slip_data.transDate;
-					document.getElementById("ai_transDate").innerText = transDate;
-					document.getElementById("match_transDate").innerText = `ตรงกัน ${transDateSmilarityScore*100}%`;
+					document.getElementById("ai_transDate").innerText = ai_data.ai_transDate;
+					document.getElementById("match_transDate").innerText = `ตรงกัน ${transDateSmilarityScore * 100}%`;
 
 					document.getElementById("api_transTime").innerText = slip_data.transTime;
-					document.getElementById("ai_transTime").innerText = transTime;
-					document.getElementById("match_transTime").innerText = `ตรงกัน ${transTimeSmilarityScore*100}%`;
+					document.getElementById("ai_transTime").innerText = ai_data.ai_transTime;
+					document.getElementById("match_transTime").innerText = `ตรงกัน ${transTimeSmilarityScore * 100}%`;
 
 					document.getElementById("api_amount").innerText = slip_data.amount;
-					document.getElementById("ai_amount").innerText = amount;
-					document.getElementById("match_amount").innerText = `ตรงกัน ${amountSmilarityScore*100}%`;
+					document.getElementById("ai_amount").innerText = ai_data.ai_amount;
+					document.getElementById("match_amount").innerText = `ตรงกัน ${amountSmilarityScore * 100}%`;
 
 					document.getElementById("api_sender").innerText = slip_data.sender;
-					document.getElementById("ai_sender").innerText = sender;
-					document.getElementById("match_sender").innerText = `ตรงกัน ${senderSmilarityScore*100}%`;
-					
-					document.getElementById("api_receiver").innerText = slip_data.receiver;
-					document.getElementById("ai_receiver").innerText = receiver;
-					document.getElementById("match_receiver").innerText = `ตรงกัน ${receiverSmilarityScore*100}%`;
+					document.getElementById("ai_sender").innerText = ai_data.ai_sender;
+					document.getElementById("match_sender").innerText = `ตรงกัน ${senderSmilarityScore * 100}%`;
 
-					
+					document.getElementById("api_receiver").innerText = slip_data.receiver;
+					document.getElementById("ai_receiver").innerText = ai_data.ai_receiver;
+					document.getElementById("match_receiver").innerText = `ตรงกัน ${receiverSmilarityScore * 100}%`;
+
+
 					const headers_ = {
-            'Authorization': 'Bearer keyMZxLGT7Whe7EIY',
-            'Content-Type': 'application/json'
-        	};
+						'Authorization': 'Bearer keyMZxLGT7Whe7EIY',
+						'Content-Type': 'application/json'
+					};
 					axios.post("https://api.airtable.com/v0/appOpvNDewQffYMOS/orders",
-                {
-                    "fields": {
-                        "order_no": uuidv4(),
-                        "channel": "Page: Bebe Fit Routine",
-												"slip_no": slip_data.transRef,
-                        "slip_date": moment(slip_data.transDate).format("YYYY-MM-DD"),
-												"slip_time": slip_data.transTime,
-												"sender_account": slip_data.sender,
-												"receiver_account": slip_data.receiver,
-												"note": "dummy test"
-                    }
-                }, { headers: headers_ }
-            )
-                .then((resp) => {
-                    console.log("success!")
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+						{
+							"fields": {
+								"order_no": uuidv4(),
+								"channel": "Page: Bebe Fit Routine",
+								"slip_no": slip_data.transRef,
+								"slip_date": moment(slip_data.transDate).format("YYYY-MM-DD"),
+								"slip_time": slip_data.transTime,
+								"sender_account": slip_data.sender,
+								"receiver_account": slip_data.receiver,
+								"note": "dummy test"
+							}
+						}, { headers: headers_ }
+					)
+						.then((resp) => {
+							console.log("success!")
+						})
+						.catch(function (error) {
+							console.log(error);
+						});
 
 				}
 
